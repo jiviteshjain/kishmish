@@ -15,7 +15,7 @@ bool cd(char* path) {
 
     int ret_val = chdir(final_path);
     if (ret_val < 0) {
-        perror("Could not change directory.");
+        perror("Could not change directory");
         return false;
     }
     return true;

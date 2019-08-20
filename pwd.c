@@ -6,7 +6,7 @@ bool pwd() {
     char* dir = getcwd(NULL, 0);
     
     if (dir == NULL) {
-        perror("Could not display the current working directory:");
+        perror("Could not display the current working directory");
         return false;
     }
     

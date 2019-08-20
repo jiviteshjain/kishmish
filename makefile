@@ -1,7 +1,7 @@
 CFLAGS = -g -Wall
 
-kishmish: shell.o utils.o pwd.o cd.o
-	gcc $(CFLAGS) shell.o utils.o pwd.o cd.o
+kishmish: shell.o utils.o pwd.o cd.o ls.o
+	gcc $(CFLAGS) shell.o utils.o pwd.o cd.o ls.o
 
 clean:
 	rm -f *.o a.out
@@ -18,3 +18,6 @@ pwd.o: pwd.c pwd.h
 
 cd.o: cd.c cd.h
 	gcc $(CFLAGS) -c cd.c
+
+ls.o: ls.c ls.h
+	gcc $(CFLAGS) -c ls.c
