@@ -3,6 +3,7 @@
 #include "pwd.h"
 #include "cd.h"
 #include "ls.h"
+#include "echo.h"
 
 int main (void) {
     // GET ESSENTIALS
@@ -31,7 +32,10 @@ int main (void) {
         }
 
         // OTHER THINGS
-        ls("/////home/jivitesh/Documents/IIIT/ECell/head", true, false);
+        char* strs[] = {
+            "sdfj", "wrir", "difdf"
+        };
+        echo(strs, 3);
     }
 
     // FREE POINTERS

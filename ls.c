@@ -83,11 +83,21 @@ ls_data get_ls_data (const char* path) {
 }
 
 void print_ls_data (const ls_data f) {
-    printf("%s\n", f.name);
+    printf(ANSI_GREEN "%s\n" ANSI_DEFAULT, f.name);
     printf("PERMISSIONS: %s\tSIZE: %lu\n", f.perms, f.size);
     printf("LAST MODIFIED ON: %s\tHARD LINKS: %d\n", f.time, f.num_h_link);
     printf("USER: %s\tGROUP: %s\n", f.user, f.group);
-    printf("_____ _____ _____ _____ _____\n\n");
+    printf("_____ _____ _____ _____ _____ _____ _____ _____ _____\n\n");
+
+    // printf("%s\t%d\t%s\t%s\t%lu\t%s\t%s\n",
+    //        f.perms,
+    //        f.num_h_link,
+    //        f.user,
+    //        f.group,
+    //        f.size,
+    //        f.time,
+    //        f.name
+    //     );
 }
 
 bool ls(char* path, bool flag_a, bool flag_l) {
