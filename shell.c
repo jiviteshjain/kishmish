@@ -1,5 +1,7 @@
 #include "shell.h"
-#include "utils.c"
+#include "utils.h"
+#include "pwd.h"
+#include "cd.h"
 
 int main (void) {
     // GET ESSENTIALS
@@ -9,10 +11,24 @@ int main (void) {
     gethostname(host_name, (HOST_NAME_MAX + 1));
 
     // REST OF THE CODE
-    char buf[100];
+
+    size_t in_buffer_size = 0;
+    ssize_t in_size = 0;
+    char* in_line = NULL;
+
     while (true) {
-        printf("%s", get_prompt());
-        scanf("%s", buf);
+        free(in_line);
+        in_size = 0;
+        in_buffer_size = 0;
+        prompt();
+        in_size = getline(&in_line, &in_buffer_size, stdin);
+
+
+
+        if(in_size <= 0){
+            free(in_line);
+            break;
+        }
     }
 
     // FREE POINTERS

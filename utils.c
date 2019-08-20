@@ -1,4 +1,5 @@
 #include "shell.h"
+#include "utils.h"
 
 char* substr(const char* str, size_t start, size_t length) {
     long long total_len = strlen(str);
@@ -44,24 +45,28 @@ char* get_relative_pwd () {
     return cur_dir;
 }
 
-char* get_prompt () {
+void prompt () {
     char* path = get_relative_pwd();
-    
-    size_t length = strlen(ANSI_YELLOW_BOLD) + strlen(user_name) + strlen(host_name) + strlen(path) + strlen(ANSI_DEFAULT) + 4;
 
     // Looks like: uname@hostname:~/path/to/pwd>
 
-    char* prompt = (char*)malloc(sizeof(char) * (length + 1));
-    prompt[0] = '\0';
-    strcat(prompt, ANSI_YELLOW_BOLD);
-    strcat(prompt, user_name);
-    strcat(prompt, "@");
-    strcat(prompt, host_name);
-    strcat(prompt, ":");
-    strcat(prompt, path);
-    strcat(prompt, "> ");
-    strcat(prompt, ANSI_DEFAULT);
+    printf(ANSI_YELLOW_BOLD "%s@%s:%s> " ANSI_DEFAULT, user_name, host_name, path);
+
+    // size_t length = strlen(ANSI_YELLOW_BOLD) + strlen(user_name) + strlen(host_name) + strlen(path) + strlen(ANSI_DEFAULT) + 4;
+
+    
+
+    // char* prompt = (char*)malloc(sizeof(char) * (length + 1));
+    // prompt[0] = '\0';
+    // strcat(prompt, ANSI_YELLOW_BOLD);
+    // strcat(prompt, user_name);
+    // strcat(prompt, "@");
+    // strcat(prompt, host_name);
+    // strcat(prompt, ":");
+    // strcat(prompt, path);
+    // strcat(prompt, "> ");
+    // strcat(prompt, ANSI_DEFAULT);
 
     free(path);
-    return prompt;
+    // return prompt;
 }
