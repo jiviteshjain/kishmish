@@ -2,7 +2,6 @@
 #define __UTILS_H
 
 char* substr(const char* str, size_t start, size_t length);
-char* get_relative_pwd();
-void prompt();
+size_t count_chars(const char* str, char c);
 
 #endif

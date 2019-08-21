@@ -1,5 +1,7 @@
 #include "shell.h"
 #include "utils.h"
+#include "prompt.h"
+#include "parse.h"
 #include "pwd.h"
 #include "cd.h"
 #include "ls.h"
@@ -32,10 +34,10 @@ int main (void) {
         }
 
         // OTHER THINGS
-        char* strs[] = {
-            "sdfj", "wrir", "difdf"
-        };
-        echo(strs, 3);
+        if (in_line[in_size-1] == '\n') {
+            in_line[in_size - 1] = '\0';
+        }
+        parse(in_line);
     }
 
     // FREE POINTERS
