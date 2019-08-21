@@ -18,6 +18,7 @@ typedef struct {
     bool valid;
 } ls_data;
 
+void handle_ls(int argc, char** argv);
 
 void print_ls_data(const ls_data f);
 

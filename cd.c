@@ -2,6 +2,23 @@
 #include "utils.h"
 #include "cd.h"
 
+
+void handle_cd (int argc, char** argv) {
+    if (argc > 0 && strcmp(argv[argc-1], "&") == 0) {
+        argc--;
+    }
+    if (argc == 0) {
+        cd(".");
+    } else if (argc > 1) {
+        printf("Could not change directory: Invalid arguments\n");
+        return;
+    } else {
+        char* temp = trim(argv[0], '\"');
+        temp = trim(temp, '\'');
+        cd(temp);
+    }
+}
+
 bool cd(char* path) {
     char* final_path;
     // TODO: Let the parser handle ~

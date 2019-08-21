@@ -2,6 +2,46 @@
 #include "utils.h"
 #include "ls.h"
 
+void handle_ls(int argc, char** argv) {
+    
+    if (argc > 0 && strcmp(argv[argc-1], "&") == 0) {
+        argc--;
+    }
+
+    if (argc == 0) {
+        ls(".", false, false);
+        return;
+    }
+
+    bool a_flag = false;
+    bool l_flag = false;
+
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            int j = 1;
+            while (argv[i][j] != '\0') {
+                if (argv[i][j] == 'l')
+                    l_flag = true;
+                if (argv[i][j] == 'a')
+                    a_flag = true;
+                j++;
+            }
+        }
+    }
+
+    bool dir_found = false;
+
+    for (int i = 0; i < argc; i++) {
+        if (argv[i][0] != '-') {
+            dir_found = true;
+            ls(argv[i], a_flag, l_flag);
+        }
+    }
+    if (!dir_found) {
+        ls(".", a_flag, l_flag);
+    }
+}
+
 int filter (const struct dirent* s) {
     // Removes .. and .
     if (strcmp(s->d_name, "..") == 0) {
@@ -22,7 +62,7 @@ ls_data get_ls_data (const char* path) {
     int ret_val = stat(path, &s);
     if (ret_val < 0) {
         // This error has to be printed here, because perror
-        perror("Could not list directory contents");
+        perror("Could not list file details");
         f.valid = false;
         return f;
     }
@@ -87,7 +127,7 @@ void print_ls_data (const ls_data f) {
     printf("PERMISSIONS: %s\tSIZE: %lu\n", f.perms, f.size);
     printf("LAST MODIFIED ON: %s\tHARD LINKS: %d\n", f.time, f.num_h_link);
     printf("USER: %s\tGROUP: %s\n", f.user, f.group);
-    printf("_____ _____ _____ _____ _____ _____ _____ _____ _____\n\n");
+    printf("_____ _____ _____\n");
 
     // printf("%s\t%d\t%s\t%s\t%lu\t%s\t%s\n",
     //        f.perms,
@@ -104,9 +144,6 @@ bool ls(char* path, bool flag_a, bool flag_l) {
     // This is reqd because on empty strings, ls and cd behave differently.
     // ~ is handled by shell
     // . and .. are handled by the syscalls themselves 
-    if (path[0] == '\0') {
-        strcpy(path, ".");
-    }
 
     // ERROR HANDLING ON PATH
     struct stat path_stat;
@@ -138,6 +175,7 @@ bool ls(char* path, bool flag_a, bool flag_l) {
 
     // PRINT FILENAMES IF NOT -l
     if (!flag_l) {
+        printf(ANSI_GREEN_BOLD "DIR: %s\n" ANSI_DEFAULT, path);
         for (int i = 0; i < num_files; i++) {
             printf("%s\n", files[i]->d_name);
             free(files[i]);
@@ -148,10 +186,9 @@ bool ls(char* path, bool flag_a, bool flag_l) {
 
     // WORRY ABOUT -l
     size_t path_len = strlen(path);
-
+    printf(ANSI_GREEN_BOLD "DIR: %s\n\n" ANSI_DEFAULT, path);
     for (int i = 0; i < num_files; i++) {
-        
-        char* file = files[i]->d_name;
+                char* file = files[i]->d_name;
         size_t file_len = strlen(file);
         
         char* file_path = (char*)malloc(sizeof(char) * (file_len + path_len + 2));
@@ -163,9 +200,9 @@ bool ls(char* path, bool flag_a, bool flag_l) {
         if (!f.valid) {
             free(file_path);
             free(files[i]);
-            free(files);
+            
             // printing error done by get_ls_data()
-            return false;
+            continue; // just one file failed
         }
         f.name = files[i]->d_name;
         print_ls_data(f);

@@ -1,35 +1,45 @@
 #include "shell.h"
 #include "utils.h"
 #include "parse.h"
+#include "cd.h"
+#include "ls.h"
+#include "pwd.h"
+#include "echo.h"
 
 void parse_command(char* str) {
     
+    if (str == NULL)
+        return;
+
     size_t len = strlen(str);
     char* str_backup = (char*)malloc(sizeof(char) * (len + 1));
     strcpy(str_backup, str);
 
-    char* next = strtok(str, whitespace_delim);
+    char* next = strtok(str, space_delim);
+    if (next == NULL)
+        return;
     char* command = (char*)malloc(sizeof(char) * (strlen(next) + 1));
     strcpy(command, next);
 
     int argc = 0;
     char** argv = (char**)malloc(sizeof(char*) * len); // lots of space
 
-    while((next = strtok(NULL, whitespace_delim)) != NULL) {
+    while((next = strtok(NULL, space_delim)) != NULL) {
         argv[argc] = (char*)malloc(sizeof(char) * (strlen(next) + 1));
         strcpy(argv[argc], next);
         argc++;
     }
     
-    if (strcmp(command, "echo")) {
-        // handle_echo(argc, argv);
-    } else if (strcmp(command, "ls")) {
-        // handle_ls(argc, argv);
-    } else if (strcmp(command, "pwd")) {
-        // handle_pwd(argc, argv);
-    } else if (strcmp(command, "cd")) {
-        // handle_cd(argc, argv);
+    if (strcmp(command, "echo") == 0) {
+        handle_echo(argc, argv);
+    } else if (strcmp(command, "ls") == 0) {
+        handle_ls(argc, argv);
+    } else if (strcmp(command, "pwd") == 0) {
+        handle_pwd(argc, argv);
+    } else if (strcmp(command, "cd") == 0) {
+        handle_cd(argc, argv);
     } else {
+        ;
         // handle_builtins(str_backup);
     }
 

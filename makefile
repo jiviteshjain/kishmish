@@ -7,17 +7,11 @@ clean:
 	rm -f *.o a.out
 
 # DONOT USE THESE RULES DIRECTLY
-shell.o: shell.c shell.h
-	gcc $(CFLAGS) -c shell.c
-
 utils.o: utils.c utils.h
 	gcc $(CFLAGS) -c utils.c
 
 prompt.o: prompt.c prompt.h
 	gcc $(CFLAGS) -c prompt.c
-
-parse.o: parse.c parse.h
-	gcc $(CFLAGS) -c parse.c
 
 pwd.o: pwd.c pwd.h
 	gcc $(CFLAGS) -c pwd.c
@@ -30,3 +24,9 @@ ls.o: ls.c ls.h
 
 echo.o: echo.c echo.h
 	gcc $(CFLAGS) -c echo.c
+
+parse.o: parse.c parse.h
+	gcc $(CFLAGS) -c parse.c
+
+shell.o: shell.c shell.h
+	gcc $(CFLAGS) -c shell.c
