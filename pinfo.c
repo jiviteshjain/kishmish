@@ -33,7 +33,7 @@ bool pinfo(pid_t pid) {
     // process ids are >= 0, so length_num works fine (it ignores '-' sign)
     sprintf(stat_path, "/proc/%d/status", pid);
 
-    char* p_name = (char*)malloc(sizeof(char) * 17); // MAX_SIZE is 16
+    char* p_name = (char*)malloc(sizeof(char) * 100); // should be enough
     char p_status;
     char* p_mem = (char*)malloc(sizeof(char) * 100); // should be enough
     char* temp = (char*)malloc(sizeof(char) * 1024); // should be enough

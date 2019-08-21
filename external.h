@@ -2,6 +2,7 @@
 #define __EXTERNAL_H
 
 #include <sys/wait.h>
+#include <signal.h>
 
 void handle_external(char* command, int argc, char** argv);
 
