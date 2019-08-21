@@ -8,27 +8,27 @@ void parse_command(char* str) {
     char* str_backup = (char*)malloc(sizeof(char) * (len + 1));
     strcpy(str_backup, str);
 
-    char* next = strtok(str, whitespaces);
-    char* command = (char*)malloc(sizeof(char) * (strlen(command) + 1));
+    char* next = strtok(str, whitespace_delim);
+    char* command = (char*)malloc(sizeof(char) * (strlen(next) + 1));
     strcpy(command, next);
 
     int argc = 0;
     char** argv = (char**)malloc(sizeof(char*) * len); // lots of space
 
-    while((next = strtok(NULL, whitespaces)) != NULL) {
+    while((next = strtok(NULL, whitespace_delim)) != NULL) {
         argv[argc] = (char*)malloc(sizeof(char) * (strlen(next) + 1));
         strcpy(argv[argc], next);
         argc++;
     }
     
     if (strcmp(command, "echo")) {
-        handle_echo(argc, argv);
+        // handle_echo(argc, argv);
     } else if (strcmp(command, "ls")) {
-        handle_ls(argc, argv);
+        // handle_ls(argc, argv);
     } else if (strcmp(command, "pwd")) {
-        handle_pwd(argc, argv);
+        // handle_pwd(argc, argv);
     } else if (strcmp(command, "cd")) {
-        handle_cd(argc, argv);
+        // handle_cd(argc, argv);
     } else {
         // handle_builtins(str_backup);
     }
