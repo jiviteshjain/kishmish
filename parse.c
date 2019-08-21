@@ -5,6 +5,8 @@
 #include "ls.h"
 #include "pwd.h"
 #include "echo.h"
+#include "pinfo.h"
+#include "external.h"
 
 void parse_command(char* str) {
     
@@ -38,9 +40,10 @@ void parse_command(char* str) {
         handle_pwd(argc, argv);
     } else if (strcmp(command, "cd") == 0) {
         handle_cd(argc, argv);
+    } else if (strcmp(command, "pinfo") == 0) {
+        handle_pinfo(argc, argv);
     } else {
-        ;
-        // handle_builtins(str_backup);
+        handle_external(command, argc, argv);
     }
 
     free(command);

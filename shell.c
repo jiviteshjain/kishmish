@@ -6,6 +6,8 @@
 #include "cd.h"
 #include "ls.h"
 #include "echo.h"
+#include "pinfo.h"
+#include "external.h"
 
 int main (void) {
     // GET ESSENTIALS

@@ -40,3 +40,53 @@ size_t count_chars (const char* str, char c) {
     }
     return count;
 }
+
+long long length_num(long long n) {
+    // Returns number of digits in abs(n)
+    if (n == 0) {
+        return 1;
+    }
+
+    if (n < 0) {
+        n = -n;
+    }
+
+    long long len = 0;
+
+    while (n > 0) {
+        n = n / 10;
+        len++;
+    }
+    return len;
+}
+
+char* num_to_str(long long n) {
+    long long len = length_num(n);
+
+    char* str = (char*)malloc(sizeof(char) * (len + (long long)(n < 0) + 1));
+
+    long long m = (n < 0 ? -n : n);
+    long long i = 0;
+    for (; i < len; i++) {
+        str[i] = (m % 10) + '0';
+        m = m / 10;
+    }
+
+    if (n < 0) {
+        str[i] = '-';
+        str[i + 1] = '\0';
+    } else {
+        str[i] = '\0';
+        i--;
+    }
+
+    long long j = 0;
+    while (i > j) {
+        char c = str[i];
+        str[i] = str[j];
+        str[j] = c;
+        i--;
+        j++;
+    }
+    return str;
+}
