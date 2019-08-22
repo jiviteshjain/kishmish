@@ -8,6 +8,7 @@
 #include "echo.h"
 #include "pinfo.h"
 #include "external.h"
+#include "history.h"
 
 int main (void) {
     // GET ESSENTIALS
@@ -15,7 +16,7 @@ int main (void) {
     user_name = getlogin(); // Statically declared. Don't free() this
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
-
+    init_history();
 
     // REST OF THE CODE
     size_t in_buffer_size = 0;

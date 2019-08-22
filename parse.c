@@ -7,6 +7,7 @@
 #include "echo.h"
 #include "pinfo.h"
 #include "external.h"
+#include "history.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -86,6 +87,8 @@ void parse_command(char* str) {
         handle_cd(argc, argv);
     } else if (strcmp(command, "pinfo") == 0) {
         handle_pinfo(argc, argv);
+    } else if (strcmp(command, "history") == 0){
+        handle_history(argc, argv);
     } else {
         handle_external(command, argc, argv);
     }
@@ -118,6 +121,7 @@ void parse(char* input) {
     // so free only those many times
     
     for (i = 0; i < num_commands; i++) {
+        store_history(commands[i]);
         parse_command(commands[i]);
         free(commands[i]);
     }
