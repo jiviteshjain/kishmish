@@ -14,14 +14,50 @@ void handle_tilda(int argc, char** argv) {
     }
 }
 
+int handle_amp(char* command, int argc, char** argv) {
+    // argv has enough space for 1 more argument
+
+    size_t c_len = strlen(command);
+
+    if (command[c_len-1] == '&') {
+        command[c_len - 1] = '\0';
+        argv[0] = (char*)malloc(sizeof(char) * 2);
+        strcpy(argv[0], "&");
+        return 1;
+    }
+
+    for (int i = 0; i < argc; i++) {
+        size_t len = strlen(argv[i]);
+        if (len == 0) {
+            continue; // safety check, although this can't happen
+        }
+        if (argv[i][len-1] != '&') {
+            continue;
+        }
+        // Now surely an ampersand
+
+        if (len == 1) {
+            // only ampersand
+            return i + 1;
+        } else {
+            // more than ampersand
+            argv[i][len - 1] = '\0';
+            argv[i + 1] = (char*)malloc(sizeof(char) * 2);
+            strcpy(argv[i + 1], "&");
+            return i + 2;
+        }
+    }
+    return argc;
+}
+
 void parse_command(char* str) {
     
     if (str == NULL)
         return;
 
     size_t len = strlen(str);
-    char* str_backup = (char*)malloc(sizeof(char) * (len + 1));
-    strcpy(str_backup, str);
+    // char* str_backup = (char*)malloc(sizeof(char) * (len + 1));
+    // strcpy(str_backup, str);
 
     char* next = strtok(str, space_delim);
     if (next == NULL)
@@ -30,16 +66,16 @@ void parse_command(char* str) {
     strcpy(command, next);
 
     int argc = 0;
-    char** argv = (char**)malloc(sizeof(char*) * len); // lots of space
+    char** argv = (char**)malloc(sizeof(char*) * (len+1)); // lots of space
 
     while((next = strtok(NULL, space_delim)) != NULL) {
         argv[argc] = (char*)malloc(sizeof(char) * (strlen(next) + 1));
         strcpy(argv[argc], next);
         argc++;
     }
-
+    argc = handle_amp(command, argc, argv);
     handle_tilda(argc, argv);
-
+    
     if (strcmp(command, "echo") == 0) {
         handle_echo(argc, argv);
     } else if (strcmp(command, "ls") == 0) {

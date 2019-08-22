@@ -16,6 +16,10 @@ void handle_echo (int argc, char** argv) {
         trimmed_argv[i] = trim(argv[i], '\"');
         trimmed_argv[i] = trim(trimmed_argv[i], '\'');
     }
+    
+    if (argc == 0) {
+        return;
+    }
 
     echo(trimmed_argv, argc);
     free(trimmed_argv); // these are not new strings, just new pointers because trim moves them.
@@ -24,6 +28,10 @@ void handle_echo (int argc, char** argv) {
 
 bool echo(char** strs, long long n) {
     // All sanitization, such as removing \n etc. is done by parsers
+    if (n == 0) {
+        return true;
+    }
+
     for (long long i = 0; i < n - 1; i++) {
         printf("%s ", strs[i]);
     }
