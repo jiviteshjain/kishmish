@@ -43,14 +43,11 @@ void handle_ls(int argc, char** argv) {
 }
 
 int filter (const struct dirent* s) {
-    // Removes .. and .
-    if (strcmp(s->d_name, "..") == 0) {
+
+    if (strlen(s->d_name) > 0 && s->d_name[0] == '.') {
         return 0;
-    } else if (strcmp(s->d_name, ".") == 0) {
-        return 0;
-    } else {
-        return 1;
     }
+    return 1;
 }
 
 ls_data get_ls_data (const char* path) {
@@ -123,21 +120,43 @@ ls_data get_ls_data (const char* path) {
 }
 
 void print_ls_data (const ls_data f) {
-    printf(ANSI_GREEN "%s\n" ANSI_DEFAULT, f.name);
-    printf("PERMISSIONS: %s\tSIZE: %lu\n", f.perms, f.size);
-    printf("LAST MODIFIED ON: %s\tHARD LINKS: %d\n", f.time, f.num_h_link);
-    printf("USER: %s\tGROUP: %s\n", f.user, f.group);
-    printf("_____ _____ _____\n");
+    // printf(ANSI_GREEN "%s\n" ANSI_DEFAULT, f.name);
+    // printf("PERMISSIONS: %s\tSIZE: %lu\n", f.perms, f.size);
+    // printf("LAST MODIFIED ON: %s\tHARD LINKS: %d\n", f.time, f.num_h_link);
+    // printf("USER: %s\tGROUP: %s\n", f.user, f.group);
+    // printf("_____ _____ _____\n");
 
-    // printf("%s\t%d\t%s\t%s\t%lu\t%s\t%s\n",
-    //        f.perms,
-    //        f.num_h_link,
-    //        f.user,
-    //        f.group,
-    //        f.size,
-    //        f.time,
-    //        f.name
-    //     );
+    if (f.perms[0] == 'd') {
+        printf("%s\t%d\t%s\t%s\t%lu\t%s\t" ANSI_CYAN_BOLD "%s\n" ANSI_DEFAULT,
+            f.perms,
+            f.num_h_link,
+            f.user,
+            f.group,
+            f.size,
+            f.time,
+            f.name
+        );
+    } else if (f.perms[3] == 'x') {
+        printf("%s\t%d\t%s\t%s\t%lu\t%s\t" ANSI_GREEN_BOLD "%s\n" ANSI_DEFAULT,
+            f.perms,
+            f.num_h_link,
+            f.user,
+            f.group,
+            f.size,
+            f.time,
+            f.name
+        );
+    } else {
+        printf("%s\t%d\t%s\t%s\t%lu\t%s\t%s\n",
+            f.perms,
+            f.num_h_link,
+            f.user,
+            f.group,
+            f.size,
+            f.time,
+            f.name
+        );
+    }
 }
 
 bool ls(char* path, bool flag_a, bool flag_l) {
@@ -186,7 +205,7 @@ bool ls(char* path, bool flag_a, bool flag_l) {
 
     // WORRY ABOUT -l
     size_t path_len = strlen(path);
-    printf(ANSI_GREEN_BOLD "DIR: %s\n\n" ANSI_DEFAULT, path);
+    printf(ANSI_GREEN_BOLD "\nDIR: %s\n" ANSI_DEFAULT, path);
     for (int i = 0; i < num_files; i++) {
                 char* file = files[i]->d_name;
         size_t file_len = strlen(file);
