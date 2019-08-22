@@ -38,9 +38,9 @@ char* get_relative_pwd() {
 void prompt() {
     char* path = get_relative_pwd();
 
-    // Looks like: uname@hostname:~/path/to/pwd>
+    // Looks like: <uname@hostname:~/path/to/pwd>
 
-    printf(ANSI_YELLOW_BOLD "%s@%s:%s> " ANSI_DEFAULT, user_name, host_name, path);
+    printf("<" ANSI_GREEN_BOLD "%s@%s" ANSI_DEFAULT ":" ANSI_CYAN "%s" ANSI_DEFAULT "> ", user_name, host_name, path);
 
     // size_t length = strlen(ANSI_YELLOW_BOLD) + strlen(user_name) + strlen(host_name) + strlen(path) + strlen(ANSI_DEFAULT) + 4;
 

@@ -85,9 +85,13 @@ bool not_kishmish(char** argv, bool bg) {
         } else if (pid > 0) {
             // IN PARENT, DON'T WAIT
             signal(SIGCHLD, child_dead);
+            // usleep(500 * 1000 * 1000);
             return true;
         } else {
             // IN CHILD
+            // close(STDOUT_FILENO);
+            // close(STDERR_FILENO);
+            // setpgid(0, 0);
             if (execvp(argv[0], argv) < 0) {
                 perror("Could not execute command");
                 exit(EXIT_FAILURE);  // kill child if can't execute command
