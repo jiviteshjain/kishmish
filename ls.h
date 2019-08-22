@@ -15,6 +15,7 @@ typedef struct {
     size_t size;
     char* time;  // malloc-ed by get_ls_data()
     char* name;  // malloc-ed by scandir()
+    blkcnt_t blocks;
     bool valid;
 } ls_data;
 

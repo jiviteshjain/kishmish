@@ -1,7 +1,7 @@
 CFLAGS = -g -Wall
 
-kishmish: shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o
-	gcc $(CFLAGS) shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o
+kishmish: shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o nightswatch.o
+	gcc $(CFLAGS) shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o nightswatch.o
 
 clean:
 	rm -f *.o a.out
@@ -30,6 +30,9 @@ pinfo.o: pinfo.c pinfo.h
 
 external.o: external.c external.h
 	gcc $(CFLAGS) -c external.c
+
+nightswatch.o: nightswatch.c nightswatch.h
+	gcc $(CFLAGS) -c nightswatch.c
 
 history.o: history.c history.h
 	gcc $(CFLAGS) -c history.c

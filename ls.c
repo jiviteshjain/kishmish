@@ -69,6 +69,7 @@ ls_data get_ls_data (const char* path) {
     f.user = getpwuid(s.st_uid)->pw_name; // TODO: perror
     f.group = getgrgid(s.st_gid)->gr_name; // TODO: perror
     f.size = s.st_size;
+    f.blocks = s.st_blocks;
     f.num_h_link = s.st_nlink;
 
     // To get last modified times
@@ -204,6 +205,7 @@ bool ls(char* path, bool flag_a, bool flag_l) {
     }
 
     // WORRY ABOUT -l
+    blkcnt_t blocks = 0;
     size_t path_len = strlen(path);
     printf(ANSI_GREEN_BOLD "\nDIR: %s\n" ANSI_DEFAULT, path);
     for (int i = 0; i < num_files; i++) {
@@ -223,11 +225,13 @@ bool ls(char* path, bool flag_a, bool flag_l) {
             // printing error done by get_ls_data()
             continue; // just one file failed
         }
+        blocks = blocks + f.blocks;
         f.name = files[i]->d_name;
         print_ls_data(f);
         free(file_path);
         free(files[i]);
     }
+    printf(ANSI_GREEN "total: %ld\n" ANSI_DEFAULT, blocks / 2);
     free(files);
     return true;
 }

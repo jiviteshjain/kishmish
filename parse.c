@@ -8,6 +8,7 @@
 #include "pinfo.h"
 #include "external.h"
 #include "history.h"
+#include "nightswatch.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -87,8 +88,10 @@ void parse_command(char* str) {
         handle_cd(argc, argv);
     } else if (strcmp(command, "pinfo") == 0) {
         handle_pinfo(argc, argv);
-    } else if (strcmp(command, "history") == 0){
+    } else if (strcmp(command, "history") == 0) {
         handle_history(argc, argv);
+    } else if (strcmp(command, "nightswatch") == 0) {
+        handle_nightswatch(argc, argv);
     } else {
         handle_external(command, argc, argv);
     }

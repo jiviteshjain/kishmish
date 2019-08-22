@@ -9,6 +9,7 @@
 #include "pinfo.h"
 #include "external.h"
 #include "history.h"
+#include "nightswatch.h"
 
 int main (void) {
     // GET ESSENTIALS
@@ -41,6 +42,7 @@ int main (void) {
             in_line[in_size - 1] = '\0';
         }
         parse(in_line);
+        // nightswatch(1, 2);
     }
 
     // FREE POINTERS

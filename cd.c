@@ -8,7 +8,7 @@ void handle_cd (int argc, char** argv) {
         argc--;
     }
     if (argc == 0) {
-        cd(".");
+        cd("~");
     } else if (argc > 1) {
         printf("Could not change directory: Invalid arguments\n");
         return;
