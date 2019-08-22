@@ -8,6 +8,12 @@
 #include "pinfo.h"
 #include "external.h"
 
+void handle_tilda(int argc, char** argv) {
+    for (int i = 0; i < argc; i++) {
+        argv[i] = tilda_expand(argv[i]);
+    }
+}
+
 void parse_command(char* str) {
     
     if (str == NULL)
@@ -31,7 +37,9 @@ void parse_command(char* str) {
         strcpy(argv[argc], next);
         argc++;
     }
-    
+
+    handle_tilda(argc, argv);
+
     if (strcmp(command, "echo") == 0) {
         handle_echo(argc, argv);
     } else if (strcmp(command, "ls") == 0) {

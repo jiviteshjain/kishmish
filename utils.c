@@ -90,3 +90,14 @@ char* num_to_str(long long n) {
     }
     return str;
 }
+
+char* tilda_expand(char* str) {
+    if (str[0] != '~')
+        return str;
+
+    ssize_t len = strlen(str) + strlen(home_dir); // +1 for '\0' -1 for '~'
+    char* final = (char*)malloc(sizeof(char) * len);
+    strcpy(final, home_dir);
+    strcat(final, str + 1);
+    return final;
+}
