@@ -8,13 +8,14 @@ void init() {
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
     init_history();
-    printf(ANSI_YELLOW_BOLD "Welcome to Kishmish - a sweet little shell.\n" ANSI_DEFAULT);
+    printf(ANSI_YELLOW_BOLD "\n\t***\tWelcome to Kishmish shell\t***\t\n");
+    printf(ANSI_YELLOW "\t  Because everything happens for a raisin\t    \t\n\n" ANSI_DEFAULT);
 }
 
 void goodbye() {
     // Cleanup function
     // Save history, print msg, free pointers, exit
-    printf(ANSI_YELLOW_BOLD "\nThank you for using Kishmish!\nThis shell was made with a tinge of love, lots of sweetness, and of course, a ton of kishmish :)\n" ANSI_DEFAULT);
+    printf(ANSI_YELLOW_BOLD "\nGoodbye!\n" ANSI_YELLOW "This shell was made with a tinge of love, lots of sweetness, and of course, a ton of kishmish :)\n" ANSI_DEFAULT);
     preserve_history();
     free(home_dir);
     free(host_name);
