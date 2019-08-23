@@ -10,14 +10,11 @@
 #include "external.h"
 #include "history.h"
 #include "nightswatch.h"
+#include "exit.h"
 
 int main (void) {
     // GET ESSENTIALS
-    home_dir = getcwd(NULL, 0);
-    user_name = getlogin(); // Statically declared. Don't free() this
-    host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
-    gethostname(host_name, (HOST_NAME_MAX + 1));
-    init_history();
+    init();
 
     // REST OF THE CODE
     size_t in_buffer_size = 0;
@@ -46,7 +43,5 @@ int main (void) {
     }
 
     // FREE POINTERS
-    free(home_dir);
-    free(host_name);
-    return 0;
+    goodbye();
 }

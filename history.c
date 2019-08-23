@@ -3,8 +3,33 @@
 #include "history.h"
 
 void init_history() {
-    ind_h = -1;
-    // ind_h is index filled, not number of commands
+    size_t len = strlen(home_dir) + strlen(HISTORY_FILE_NAME) + 1;
+    history_path = (char*)malloc(sizeof(char) * (len + 1));
+    strcpy(history_path, home_dir);
+    strcat(history_path, "/");
+    strcat(history_path, HISTORY_FILE_NAME);
+    
+    FILE* f = fopen(history_path, "rb");
+    if (f == NULL) {
+        // initialise the struct yourself, assume it never existed before
+        history.ind_h = -1;
+        return;
+    }
+
+    fread(&history, sizeof(history), 1, f);
+    fclose(f);
+}
+
+void preserve_history() {
+    FILE* f = fopen(history_path, "wb");
+    if (f == NULL) {
+        printf("Could not save history.\n");
+        return;
+    }
+    if (fwrite(&history, sizeof(history), 1, f) != 1) {
+        printf("Could not save history.\n");
+        return;
+    }
 }
 
 void handle_history(int argc, char** argv) {
@@ -35,57 +60,57 @@ void store_history(char* str) {
     if (strlen(str) > 1023) {
         return;
     }
-    if (ind_h >= 0 && strcmp(history[ind_h % 20], str) == 0) {
+    if (history.ind_h >= 0 && strcmp(history.data[history.ind_h % 20], str) == 0) {
         return; //avoid consecutive duplicates
     }
-    if (ind_h < 19) {
-        ind_h++;
-        strcpy(history[ind_h], str);
+    if (history.ind_h < 19) {
+        history.ind_h++;
+        strcpy(history.data[history.ind_h], str);
         return;
     }
 
-    ind_h++;
-    if (ind_h >= 40) {
-        ind_h = ind_h - 20;
+    history.ind_h++;
+    if (history.ind_h >= 40) {
+        history.ind_h = history.ind_h - 20;
     }
 
-    // ind_h >= 20 here
-    strcpy(history[ind_h - 20], str);
+    // history.ind_h >= 20 here
+    strcpy(history.data[history.ind_h - 20], str);
 }
 
 void print_history(int n) {
     if (n <= 0) {
         return;
     }
-    if (n > ind_h + 1) {
-        n = ind_h + 1;
+    if (n > history.ind_h + 1) {
+        n = history.ind_h + 1;
     }
     if (n > 10) {
         n = 10;
     }
 
-    if (ind_h < 20) {
-        for (int i = ind_h - n + 1; i <= ind_h; i++) {
-            printf("%s\n", history[i]);
+    if (history.ind_h < 20) {
+        for (int i = history.ind_h - n + 1; i <= history.ind_h; i++) {
+            printf("%s\n", history.data[i]);
         }
         return;
     }
 
-    // ind_h >= 20 here
-    // ind_h - 20 gives index
+    // history.ind_h >= 20 here
+    // history.ind_h - 20 gives index
 
-    if (n <= ind_h - 20) {
-        for (int i = ind_h - n -19; i <= ind_h - 20; i++) {
-            printf("%s\n", history[i]);
+    if (n <= history.ind_h - 20) {
+        for (int i = history.ind_h - n -19; i <= history.ind_h - 20; i++) {
+            printf("%s\n", history.data[i]);
         }
         return;
     }
 
     // n > in_h - 20 here
     // in_h >= 20 here
-    int s = ind_h - n + 1;
+    int s = history.ind_h - n + 1;
     for (int i = 0; i < n; i++) {
-        printf("%s\n", history[s]);
+        printf("%s\n", history.data[s]);
         s = (s + 1) % 20;
     }
 }

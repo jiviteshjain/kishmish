@@ -1,5 +1,25 @@
 #include "shell.h"
 #include "utils.h"
+#include "history.h"
+
+void init() {
+    home_dir = getcwd(NULL, 0);
+    user_name = getlogin();  // Statically declared. Don't free() this
+    host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
+    gethostname(host_name, (HOST_NAME_MAX + 1));
+    init_history();
+    printf(ANSI_YELLOW_BOLD "Welcome to Kishmish - a sweet little shell.\n" ANSI_DEFAULT);
+}
+
+void goodbye() {
+    // Cleanup function
+    // Save history, print msg, free pointers, exit
+    printf(ANSI_YELLOW_BOLD "\nThank you for using Kishmish!\nThis shell was made with a tinge of love, lots of sweetness, and of course, a ton of kishmish :)\n" ANSI_DEFAULT);
+    preserve_history();
+    free(home_dir);
+    free(host_name);
+    exit(EXIT_SUCCESS);
+}
 
 char* trim(char* str, char c) {
     // trims occurences of c from front and back
