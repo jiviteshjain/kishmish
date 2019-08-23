@@ -67,7 +67,7 @@ bool night_interrupt() {
     while (fgets(temp, 1000, f) != NULL) {
         i++;
         if (i == 3) {
-            temp[48] = '\0';
+            temp[49] = '\0';
             printf("%s\n", temp + 5);
             break;
         }

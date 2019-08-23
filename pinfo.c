@@ -87,14 +87,15 @@ bool pinfo(pid_t pid) {
         return false;
     }
     temp[exec_len] = '\0';
-
+    char* p_path = get_relative_pwd(temp);
     // All data available
 
     printf("PROCESS: %s\tID: %d\n", p_name, pid);
     printf("PROCESS STATUS: %c\n", p_status);
     printf("VIRTUAL MEMORY: %s\n", p_mem);
-    printf("EXECUTABLE PATH: %s\n", temp);
+    printf("EXECUTABLE PATH: %s\n", p_path);
 
+    free(p_path);
     free(temp);
     free(p_name);
     free(p_mem);
