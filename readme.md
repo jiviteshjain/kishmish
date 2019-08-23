@@ -73,7 +73,7 @@ $ make clean
 - Kishmish tries to handle all reasonable input errors appropriately.
 
 ### Command History
-- Kishmish stores command history across sessions,capped at a maximum of 20 commands<a id="note1" href="foot1"><sup>1</sup></a>. The number of commands that can be displayed using `history` is limited to 10<a id="note1" href="foot1"><sup>1</sup></a>.
+- Kishmish stores command history across sessions, capped at a maximum of 20 commands<a id="note1" href="#foot1"><sup>1</sup></a>. The number of commands that can be displayed using `history` is limited to 10<a id="note1" href="#foot1"><sup>1</sup></a>.
 - This is achieved by storing history data in a file at the end of this session and reading it at the beginning of the next. During a session, history data is managed internally in an array. This is to reduce the number of file accesses and improve performance.
 - The history file, `.kishmish_history.dat`, is a binary file that is created automatically in the home directory, if it doesn't already exist. Deletion of this file is harmless, except the loss of history data from the previous sessions.
 - The history data is written to file only when the shell exits normally, that is on receiving an `EOF` signal (<kbd>Ctrl</kbd>+<kbd>D</kbd> on Linux based systems) or upon use of the `exit` command. Thus the use of `SIGINT` (<kbd>Ctrl</kbd>+<kbd>C</kbd> on Linux based systems) to exit Kishmish should be avoided.
@@ -84,12 +84,12 @@ $ make clean
 - Depending on whether the program was invoked in the foreground or in the background, the parent process does or does not wait for the child process to terminate, respectively.
 - Invocation in the background is requested by adding an ampersand symbol (`&`) after the complete command. It may or may not be separated by whitespace. Any part of the command after the `&` symbol is ignored.
 - The shell currently does not support commands like `fg` and `bg` that send processes to the foreground and to the background, however it does alert the user whenever a background process terminates.
-- Programs that compete with the shell for I/O, such as the *Vi* and *Vim* text editors should not be invoked in the background<a id="note2" href="foot2"><sup>2</sup></a>.
+- Programs that compete with the shell for I/O, such as the *Vi* and *Vim* text editors should not be invoked in the background<a id="note2" href="#foot2"><sup>2</sup></a>.
 
 ### Built-in Commands
 - All built-in commands listed above behave as expected, mimicking the behaviour of bash.
 
 ___
-<a id="foot1" href="note1"><b>1</b></a>: As per assignment requirements
+<a id="foot1" href="#note1"><b>1</b></a>: As per assignment requirements
 
-<a id="foot2" href="note2"><b>2</b></a>: Such processes need to be suspended when in the background, and Kishmish doesn't currently support process suspension
+<a id="foot2" href="#note2"><b>2</b></a>: Such processes need to be suspended when in the background, and Kishmish doesn't currently support process suspension
