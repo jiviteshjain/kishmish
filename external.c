@@ -11,25 +11,20 @@ void child_dead (int sig_num) {
         return;
     }
 
-    // char* file_path = (char*)malloc(sizeof(char) * (12 + length_num(pid)));
-    // sprintf(file_path, "/proc/%d/comm", pid);
-    // printf("%s\n", file_path);
-    // char* p_name = (char*)malloc(sizeof(char) * 100);
-    // FILE* f = fopen(file_path, "r");
-    // if (f == NULL) {
-    //     strcpy(p_name, "-undefined-");
-    // } else {
-    //     fgets(p_name, 1000, f);
-    // }
-    // free(file_path);
-    // if (f != NULL)
-    //     fclose(f);
+    char* temp = get_process_name(pid); // Don't free temp
 
     if (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS) {
-        fprintf(stderr, ANSI_RED_BOLD "\nALERT: Process with ID %d exited normally.\n" ANSI_DEFAULT, pid);
+        if (temp == NULL)
+            fprintf(stderr, ANSI_RED_BOLD "\nALERT: Process with ID %d exited normally.\n" ANSI_DEFAULT, pid);
+        else
+            fprintf(stderr, ANSI_RED_BOLD "\nALERT: %s with ID %d exited normally.\n" ANSI_DEFAULT, temp, pid);
     } else {
-        fprintf(stderr, ANSI_RED_BOLD "\nALERT: Process with ID %d exited abnormally.\n" ANSI_DEFAULT, pid);
+        if (temp == NULL)
+            fprintf(stderr, ANSI_RED_BOLD "\nALERT: Process with ID %d exited abnormally.\n" ANSI_DEFAULT, pid);
+        else
+            fprintf(stderr, ANSI_RED_BOLD "\nALERT: %s with ID %d exited abnormally.\n" ANSI_DEFAULT, temp, pid);
     }
+    free(temp);
     prompt();
     fflush(stdout);
     return;
@@ -84,6 +79,8 @@ bool not_kishmish(char** argv, bool bg) {
             return false;
         } else if (pid > 0) {
             // IN PARENT, DON'T WAIT
+            store_process(pid, argv[0]);
+            printf("[%d] %d\n", num_processes, pid);
             signal(SIGCHLD, child_dead);
             // usleep(500 * 1000 * 1000);
             return true;
@@ -98,4 +95,41 @@ bool not_kishmish(char** argv, bool bg) {
             }
         }
     }
+}
+
+void init_bg_process() {
+    for (int i = 0; i < MAX_BG_PROCESS; i++) {
+        processes[i].pid = -1;
+    }
+    num_processes = 0;
+}
+
+void store_process(pid_t pid, char* comm) {
+    num_processes++;
+    int i = 0;
+    for (int i = 0; i < MAX_BG_PROCESS; i++) {
+        if (processes[i].pid == -1) {
+            break;
+        }
+    }
+    if (processes[i].pid != -1)
+        return; // no space to store
+
+    // Now we have space to store
+
+    strcpy(processes[i].p_name, comm);
+    processes[i].pid = pid;
+}
+
+char* get_process_name(pid_t pid) {
+    num_processes--;
+    for (int i = 0; i < MAX_BG_PROCESS; i++) {
+        if (processes[i].pid == pid) {
+            char* temp = (char*)malloc(sizeof(char) * (strlen(processes[i].p_name) + 1));
+            strcpy(temp, processes[i].p_name);
+            processes[i].pid = -1;
+            return temp;
+        }
+    }
+    return NULL;
 }

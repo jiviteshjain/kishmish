@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "utils.h"
 #include "history.h"
+#include "external.h"
 
 void init() {
     home_dir = getcwd(NULL, 0);
@@ -8,6 +9,7 @@ void init() {
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
     init_history();
+    init_bg_process();
     printf(ANSI_YELLOW_BOLD "\n\t***\tWelcome to Kishmish shell\t***\t\n");
     printf(ANSI_YELLOW "\t  Because everything happens for a raisin\t    \t\n\n" ANSI_DEFAULT);
 }
