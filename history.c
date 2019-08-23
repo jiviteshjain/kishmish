@@ -35,7 +35,9 @@ void store_history(char* str) {
     if (strlen(str) > 1023) {
         return;
     }
-
+    if (ind_h >= 0 && strcmp(history[ind_h % 20], str) == 0) {
+        return; //avoid consecutive duplicates
+    }
     if (ind_h < 19) {
         ind_h++;
         strcpy(history[ind_h], str);
