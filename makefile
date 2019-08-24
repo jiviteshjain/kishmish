@@ -1,4 +1,4 @@
-CFLAGS = -g -Wall
+CFLAGS = -g
 
 kishmish: shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o nightswatch.o exit.o
 	gcc -o kishmish $(CFLAGS) shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o nightswatch.o exit.o
