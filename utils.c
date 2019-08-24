@@ -166,16 +166,19 @@ char* get_relative_pwd(char* dir) {
 
     char* first_part = substr(cur_dir, 0, home_len);
     if (first_part != NULL && strcmp(first_part, home_dir) == 0) {
-        char* second_part = substr(cur_dir, home_len, cur_len - home_len);
-        char* relative_pwd = (char*)malloc(sizeof(char) * (strlen(second_part) + 2));
-        relative_pwd[0] = '~';
-        relative_pwd[1] = '\0';
-        strcat(relative_pwd, second_part);
+        size_t first_len = strlen(first_part);
+        if (first_len < cur_len && (cur_dir[first_len] == '/' || cur_dir[first_len] == '\0')) {
+            char* second_part = substr(cur_dir, home_len, cur_len - home_len);
+            char* relative_pwd = (char*)malloc(sizeof(char) * (strlen(second_part) + 2));
+            relative_pwd[0] = '~';
+            relative_pwd[1] = '\0';
+            strcat(relative_pwd, second_part);
 
-        free(cur_dir);
-        free(first_part);
-        free(second_part);
-        return relative_pwd;
+            free(cur_dir);
+            free(first_part);
+            free(second_part);
+            return relative_pwd;
+        }
     }
     free(first_part);
     return cur_dir;

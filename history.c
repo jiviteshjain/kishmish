@@ -88,8 +88,8 @@ void print_history(int n) {
     if (n > history.ind_h + 1) {
         n = history.ind_h + 1;
     }
-    if (n > 10) {
-        n = 10;
+    if (n > 20) {
+        n = 20;
     }
 
     if (history.ind_h < 20) {

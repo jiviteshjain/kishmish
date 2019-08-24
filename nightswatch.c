@@ -62,12 +62,20 @@ bool night_interrupt() {
         perror("Could not display interrupt info");
         return false;
     }
-    char* temp = (char*)malloc(sizeof(char) * 100);
+    char* temp = (char*)malloc(sizeof(char) * 1024);
     int i = 0;
-    while (fgets(temp, 1000, f) != NULL) {
+    while (fgets(temp, 1023, f) != NULL) {
         i++;
         if (i == 3) {
-            temp[49] = '\0';
+            for (int j = 0; j < 1024; j++) {
+                if (temp[j] == '\0' || temp[j] == '\n'){
+                    break;
+                }
+                if (temp[j] == 'I') {
+                    temp[j] = '\0';
+                    break;
+                }
+            }
             printf("%s\n", temp + 5);
             break;
         }
@@ -116,8 +124,23 @@ bool night_dirty() {
 bool nightswatch(int comm, int interval) {
     if (comm == 0) {
         // INTERRUPTS
-        printf(ANSI_GREEN "Watching keyboard interrupts...\n");
-        printf("       CPU0       CPU1       CPU2       CPU3\n" ANSI_DEFAULT);
+        printf(ANSI_GREEN "Watching keyboard interrupts...\n" ANSI_DEFAULT);
+        FILE* f = fopen("/proc/interrupts", "r");
+        if (f == NULL) {
+            perror("Could not display interrupt info");
+            return false;
+        }
+        char* temp = (char*)malloc(sizeof(char) * 1024);
+        if (fgets(temp, 1023, f) != NULL) {
+            printf(ANSI_GREEN "%s" ANSI_DEFAULT, temp + 5);
+        } else {
+            free(temp);
+            fclose(f);
+            printf("Could not display interrupt info: Unable to read file.\n");
+            return false;
+        }
+        free(temp);
+        fclose(f);
         while (true) {
             if (!night_interrupt())
                 return false;
