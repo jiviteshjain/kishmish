@@ -89,6 +89,8 @@ $ make clean
 ### Built-in Commands
 - All built-in commands listed above behave as expected, mimicking the behaviour of bash.
 
+#### *Have a grape day!*
+#### *Jivitesh Jain, 2018101092, UG-2, CSE*
 ___
 <a id="foot1" href="#note1"><b>1</b></a>: As per assignment requirements
 
