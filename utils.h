@@ -12,5 +12,6 @@ long long length_num(long long n);
 char* num_to_str(long long n);
 char* tilda_expand(char* str);
 char* get_relative_pwd(char* dir);
+char* get_home_dir();
 
 #endif

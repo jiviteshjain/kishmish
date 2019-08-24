@@ -4,7 +4,7 @@ kishmish: shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o extern
 	gcc -o kishmish $(CFLAGS) shell.o utils.o prompt.o parse.o pwd.o cd.o ls.o echo.o pinfo.o external.o history.o nightswatch.o exit.o
 
 clean:
-	rm -f *.o a.out
+	rm -f *.o kishmish
 
 # DONOT USE THESE RULES DIRECTLY
 utils.o: utils.c utils.h

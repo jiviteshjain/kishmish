@@ -16,7 +16,10 @@ void init_history() {
         return;
     }
 
-    fread(&history, sizeof(history), 1, f);
+    if (fread(&history, sizeof(history), 1, f) != 1) {
+        // initialise the struct yourself, assume it never existed before
+        history.ind_h = -1;
+    }
     fclose(f);
 }
 

@@ -76,7 +76,7 @@ $ make clean
 - Kishmish stores command history across sessions, capped at a maximum of 20 commands<a id="note1" href="#foot1"><sup>1</sup></a>. The number of commands that can be displayed using `history` is limited to 10<a id="note1" href="#foot1"><sup>1</sup></a>.
 - This is achieved by storing history data in a file at the end of this session and reading it at the beginning of the next. During a session, history data is managed internally in an array. This is to reduce the number of file accesses and improve performance.
 - The history file, `.kishmish_history.dat`, is a binary file that is created automatically in the home directory, if it doesn't already exist. Deletion of this file is harmless, except the loss of history data from the previous sessions.
-- The history data is written to file only when the shell exits normally, that is on receiving an `EOF` signal (<kbd>Ctrl</kbd>+<kbd>D</kbd> on Linux based systems) or upon use of the `exit` command. Thus the use of `SIGINT` (<kbd>Ctrl</kbd>+<kbd>C</kbd> on Linux based systems) to exit Kishmish should be avoided.
+- The history data is written to file only when the shell exits normally, that is on receiving an `EOF` signal (<kbd>Ctrl</kbd>+<kbd>D</kbd> on Linux-based systems) or upon use of the `exit` command. Thus the use of `SIGINT` (<kbd>Ctrl</kbd>+<kbd>C</kbd> on Linux-based systems) to exit Kishmish should be avoided.
 
 ### Execution of External Programs
 - Kishmish is capable of launching external programs in the foreground as well as in the background.

@@ -4,7 +4,7 @@
 #include "external.h"
 
 void init() {
-    home_dir = getcwd(NULL, 0);
+    home_dir = get_home_dir();
     user_name = getlogin();  // Statically declared. Don't free() this
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
@@ -123,6 +123,30 @@ char* tilda_expand(char* str) {
     strcpy(final, home_dir);
     strcat(final, str + 1);
     return final;
+}
+
+char* get_home_dir() {
+    pid_t pid = getpid();
+    char* read_path = (char*)malloc(sizeof(char) * 1024);
+    sprintf(read_path, "/proc/%d/exe", pid);
+    
+    char* temp = (char*)malloc(sizeof(char) * 1024);
+    ssize_t exec_len = readlink(read_path, temp, 1023);
+
+    if (exec_len < 0) {
+        free(read_path);
+        free(temp);
+        return getcwd(NULL, 0);
+    }
+    temp[exec_len] = '\0';
+    for (int i = exec_len - 1; i >= 0; i--) {
+        if (temp[i] == '/') {
+            temp[i] = '\0';
+            break;
+        }
+    }
+    free(read_path);
+    return temp;
 }
 
 char* get_relative_pwd(char* dir) {
