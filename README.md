@@ -57,7 +57,9 @@ $ make clean
 - `history.c` : Contains functions that implement the `history` command
 - `nightswatch.c` : Contains functions that implement the `nightswatch` command
 - `makefile` : Contains the `make` rules for compiling the files
-- `readme.md` : The file you are reading now
+- `README.md` : The file you are reading now
+- `README.pdf` : Another file you could be reading now
+- `LICENSE` : This project is open-sourced under an MIT license. Details in the file. WARNING: Legal language ahead.
 
 *A header file accompanies each of the C files listed above*
 
