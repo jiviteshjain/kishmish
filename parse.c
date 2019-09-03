@@ -10,6 +10,7 @@
 #include "history.h"
 #include "nightswatch.h"
 #include "exit.h"
+#include "env.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -95,6 +96,10 @@ void parse_command(char* str) {
         handle_nightswatch(argc, argv);
     } else if (strcmp(command, "exit") == 0) {
         handle_exit(argc, argv);
+    } else if (strcmp(command, "setenv") == 0) {
+        handle_setenv(argc, argv);
+    } else if (strcmp(command, "unsetenv") == 0) {
+        handle_unsetenv(argc, argv);
     } else {
         handle_external(command, argc, argv);
     }

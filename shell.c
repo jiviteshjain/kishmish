@@ -2,15 +2,6 @@
 #include "utils.h"
 #include "prompt.h"
 #include "parse.h"
-#include "pwd.h"
-#include "cd.h"
-#include "ls.h"
-#include "echo.h"
-#include "pinfo.h"
-#include "external.h"
-#include "history.h"
-#include "nightswatch.h"
-#include "exit.h"
 
 int main (void) {
     // GET ESSENTIALS
