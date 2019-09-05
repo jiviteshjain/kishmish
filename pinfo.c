@@ -41,6 +41,10 @@ bool pinfo(pid_t pid) {
     FILE* f = fopen(stat_path, "r");
     if (f == NULL) {
         perror("Could not list process details");
+        free(temp);
+        free(p_name);
+        free(p_mem);
+        free(stat_path);
         return false;
     }
 
