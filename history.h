@@ -4,7 +4,7 @@
 #define HISTORY_FILE_NAME ".kishmish_history.dat"
 
 struct history_struct {
-    char data[20][1024];
+    char data[20][MAX_STATIC_STR_LEN];
     int ind_h;
 };
 

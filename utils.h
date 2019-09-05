@@ -13,5 +13,6 @@ char* num_to_str(long long n);
 char* tilda_expand(char* str);
 char* get_relative_pwd(char* dir);
 char* get_home_dir();
+char* get_full_command(char* command, int argc, char** argv);
 
 #endif

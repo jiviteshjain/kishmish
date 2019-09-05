@@ -33,10 +33,10 @@ bool pinfo(pid_t pid) {
     // process ids are >= 0, so length_num works fine (it ignores '-' sign)
     sprintf(stat_path, "/proc/%d/status", pid);
 
-    char* p_name = (char*)malloc(sizeof(char) * 100); // should be enough
+    char* p_name = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN); // should be enough
     char p_status;
-    char* p_mem = (char*)malloc(sizeof(char) * 100); // should be enough
-    char* temp = (char*)malloc(sizeof(char) * 1024); // should be enough
+    char* p_mem = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN); // should be enough
+    char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN); // should be enough
     
     FILE* f = fopen(stat_path, "r");
     if (f == NULL) {
@@ -45,7 +45,7 @@ bool pinfo(pid_t pid) {
     }
 
     int i = 0;
-    while (fgets(temp, 1000, f) != NULL) {
+    while (fgets(temp, MAX_STATIC_STR_LEN-1, f) != NULL) {
         i++;
         if (i == 1) {
             // Process name
@@ -81,7 +81,7 @@ bool pinfo(pid_t pid) {
     fclose(f);
     sprintf(stat_path, "/proc/%d/exe", pid);
 
-    ssize_t exec_len = readlink(stat_path, temp, 1000);
+    ssize_t exec_len = readlink(stat_path, temp, MAX_STATIC_STR_LEN-1);
     if (exec_len < 0) {
         perror("Could not list process details");
         return false;

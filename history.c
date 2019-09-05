@@ -60,7 +60,7 @@ void handle_history(int argc, char** argv) {
 }
 
 void store_history(char* str) {
-    if (strlen(str) > 1023) {
+    if (strlen(str) > MAX_STATIC_STR_LEN-1) {
         return;
     }
     if (history.ind_h >= 0 && strcmp(history.data[history.ind_h % 20], str) == 0) {

@@ -62,12 +62,12 @@ bool night_interrupt() {
         perror("Could not display interrupt info");
         return false;
     }
-    char* temp = (char*)malloc(sizeof(char) * 1024);
+    char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
     int i = 0;
-    while (fgets(temp, 1023, f) != NULL) {
+    while (fgets(temp, MAX_STATIC_STR_LEN-1, f) != NULL) {
         i++;
         if (i == 3) {
-            for (int j = 0; j < 1024; j++) {
+            for (int j = 0; j < MAX_STATIC_STR_LEN; j++) {
                 if (temp[j] == '\0' || temp[j] == '\n'){
                     break;
                 }
@@ -130,8 +130,8 @@ bool nightswatch(int comm, int interval) {
             perror("Could not display interrupt info");
             return false;
         }
-        char* temp = (char*)malloc(sizeof(char) * 1024);
-        if (fgets(temp, 1023, f) != NULL) {
+        char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
+        if (fgets(temp, MAX_STATIC_STR_LEN-1, f) != NULL) {
             printf(ANSI_GREEN "%s" ANSI_DEFAULT, temp + 5);
         } else {
             free(temp);

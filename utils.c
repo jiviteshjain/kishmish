@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "history.h"
 #include "external.h"
+#include "process.h"
 
 void init() {
     home_dir = get_home_dir();
@@ -9,7 +10,7 @@ void init() {
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
     init_history();
-    init_bg_process();
+    init_processes();
     printf(ANSI_YELLOW_BOLD "\n\t***\tWelcome to Kishmish shell\t***\t\n");
     printf(ANSI_YELLOW "\t  Because everything happens for a raisin\t    \t\n\n" ANSI_DEFAULT);
 }
@@ -127,11 +128,11 @@ char* tilda_expand(char* str) {
 
 char* get_home_dir() {
     pid_t pid = getpid();
-    char* read_path = (char*)malloc(sizeof(char) * 1024);
+    char* read_path = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
     sprintf(read_path, "/proc/%d/exe", pid);
     
-    char* temp = (char*)malloc(sizeof(char) * 1024);
-    ssize_t exec_len = readlink(read_path, temp, 1023);
+    char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
+    ssize_t exec_len = readlink(read_path, temp, MAX_STATIC_STR_LEN-1);
 
     if (exec_len < 0) {
         free(read_path);
@@ -182,4 +183,25 @@ char* get_relative_pwd(char* dir) {
     }
     free(first_part);
     return cur_dir;
+}
+
+char* get_full_command(char* command, int argc, char** argv) {
+
+    char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
+    strcpy(temp, command);
+    size_t len = strlen(temp);
+
+    for (int i = 0; i < argc; i++) {
+        len = len + strlen(argv[i]) + 1;  // 1 for space
+        if (len >= MAX_STATIC_STR_LEN - 1) { // 1 for null character
+            break;
+        }
+        strcat(temp, argv[i]);
+        strcat(temp, " ");
+    }
+
+    len = strlen(temp);  // get the exact length
+    if (temp[len-1] == ' ')
+        temp[len - 1] = '\0';
+    return temp;
 }
