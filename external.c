@@ -31,6 +31,10 @@ void child_dead (int sig_num) {
     // free(p_name);
 }
 
+void child_stop(int sig_num) {
+    raise(SIGSTOP);
+}
+
 void handle_external(char* command, int argc, char** argv) {
     char** new_argv = (char**)malloc(sizeof(char*) * (argc + 2));
     new_argv[0] = command; // Not copying strings, just the pointers
@@ -86,9 +90,8 @@ bool not_kishmish(char** argv, bool bg) {
             return true;
         } else {
             // IN CHILD
-            // close(STDOUT_FILENO);
-            // close(STDERR_FILENO);
-            // setpgid(0, 0);
+            setpgid(0, 0);
+            signal(SIGTTIN, child_stop);
             if (execvp(argv[0], argv) < 0) {
                 perror("Could not execute command");
                 exit(EXIT_FAILURE);  // kill child if can't execute command
