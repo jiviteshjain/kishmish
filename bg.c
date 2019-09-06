@@ -38,5 +38,7 @@ bool bg(int job_num) {
         return false;
     }
 
+    printf("[%d] %s %d running in background\n", job_num, p->pname, p->pid);
+
     return true;
 }

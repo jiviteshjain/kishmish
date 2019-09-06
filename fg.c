@@ -31,6 +31,8 @@ bool fg(int job_num) {
     }
 
     pid_t child_pid = p->pid;
+    
+    printf("[%d] %s %d resumed\n", job_num, p->pname, p->pid);
 
     processes = delete_node_by_pid(processes, child_pid);
 
