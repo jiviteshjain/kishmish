@@ -15,6 +15,7 @@
 #include "kjob.h"
 #include "overkill.h"
 #include "fg.h"
+#include "bg.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -112,6 +113,8 @@ void parse_command(char* str) {
         handle_overkill(argc, argv);
     } else if (strcmp(command, "fg") == 0) {
         handle_fg(argc, argv);
+    } else if (strcmp(command, "bg") == 0) {
+        handle_bg(argc, argv);
     } else {
         handle_external(command, argc, argv);
     }

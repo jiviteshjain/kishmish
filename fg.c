@@ -36,7 +36,7 @@ bool fg(int job_num) {
 
     signal(SIGTTIN, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
-
+    // TODO: Error handling here
     tcsetpgrp(STDIN_FILENO, child_pid);
     kill(child_pid, SIGCONT);
 
