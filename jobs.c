@@ -1,7 +1,7 @@
 #include "shell.h"
 #include "utils.h"
 #include "process.h"
-#include "job.h"
+#include "jobs.h"
 
 char get_proc_state(pid_t pid) {
     char* stat_path = (char*)malloc(sizeof(char) * (15 + length_num(pid)));

@@ -11,11 +11,17 @@ void child_dead (int sig_num) {
     if (pid <= 0) {
         return;
     }
-
-    char* temp = get_data_by_pid(processes, pid)->pname;  // Don't free temp
-    char* pname = (char*)malloc(sizeof(char) * (strlen(temp) + 1));
-    strcpy(pname, temp);
-    processes = delete_node_by_pid(processes, pid);
+    proc* p = get_data_by_pid(processes, pid);
+    char* pname;
+    if (p != NULL) {
+        char* temp = p->pname;  // Don't free temp
+        pname = (char*)malloc(sizeof(char) * (strlen(temp) + 1));
+        strcpy(pname, temp);
+        processes = delete_node_by_pid(processes, pid);
+    } else {
+        pname = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
+        strcpy(pname, "Process");
+    }
 
     if (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS) {
         fprintf(stderr, ANSI_RED_BOLD "\nALERT: %s with ID %d exited normally.\n" ANSI_DEFAULT, pname, pid);
@@ -28,9 +34,9 @@ void child_dead (int sig_num) {
     return;
 }
 
-void child_stop(int sig_num) {
-    raise(SIGSTOP);
-}
+// void child_stop(int sig_num) {
+//     raise(SIGSTOP);
+// }
 
 void handle_external(char* command, int argc, char** argv) {
     char** new_argv = (char**)malloc(sizeof(char*) * (argc + 2));
@@ -83,11 +89,12 @@ bool not_kishmish(int argc, char** argv, bool bg) {
             int id = store_process(pid, argc, argv);
             printf("[%d] %d\n", id, pid);
             signal(SIGCHLD, child_dead);
+            tcsetpgrp(STDIN_FILENO, getpgrp());
             return true;
         } else {
             // IN CHILD
             setpgid(0, 0);
-            signal(SIGTTIN, child_stop);
+            // signal(SIGTTIN, child_stop);
             if (execvp(argv[0], argv) < 0) {
                 perror("Could not execute command");
                 exit(EXIT_FAILURE);  // kill child if can't execute command

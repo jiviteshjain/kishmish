@@ -11,7 +11,10 @@
 #include "nightswatch.h"
 #include "exit.h"
 #include "env.h"
-#include "job.h"
+#include "jobs.h"
+#include "kjob.h"
+#include "overkill.h"
+#include "fg.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -103,6 +106,12 @@ void parse_command(char* str) {
         handle_unsetenv(argc, argv);
     } else if (strcmp(command, "jobs") == 0) {
         handle_jobs(argc, argv);
+    } else if (strcmp(command, "kjob") == 0) {
+        handle_kjob(argc, argv);
+    } else if (strcmp(command, "overkill") == 0) {
+        handle_overkill(argc, argv);
+    } else if (strcmp(command, "fg") == 0) {
+        handle_fg(argc, argv);
     } else {
         handle_external(command, argc, argv);
     }
