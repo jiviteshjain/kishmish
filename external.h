@@ -20,9 +20,9 @@ void handle_external(char* command, int argc, char** argv);
 
 bool not_kishmish(int argc, char** argv, bool bg);
 
-void child_dead(int sig_num);
 
-void child_stop(int sig_num);
+
+// void child_stop(int sig_num);
 
 // void store_process(pid_t pid, char* comm);
 

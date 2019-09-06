@@ -3,14 +3,24 @@
 #include "history.h"
 #include "external.h"
 #include "process.h"
+#include "signals.h"
+
 
 void init() {
     home_dir = get_home_dir();
     user_name = getlogin();  // Statically declared. Don't free() this
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
     gethostname(host_name, (HOST_NAME_MAX + 1));
+
+    SHELL_PID = getpid();
+    FG_CHILD_PID = -1;
+    FG_CHILD_PNAME[0] = '\0';
+
+    init_signals();
     init_history();
     init_processes();
+    
+    
     printf(ANSI_YELLOW_BOLD "\n\t***\tWelcome to Kishmish shell\t***\t\n");
     printf(ANSI_YELLOW "\t  Because everything happens for a raisin\t    \t\n\n" ANSI_DEFAULT);
 }

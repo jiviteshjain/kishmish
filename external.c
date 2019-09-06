@@ -3,36 +3,8 @@
 #include "external.h"
 #include "prompt.h"
 #include "process.h"
+#include "signals.h"
 
-void child_dead (int sig_num) {
-    int w_st;
-    pid_t pid = waitpid(-1, &w_st, WNOHANG);
-
-    if (pid <= 0) {
-        return;
-    }
-    proc* p = get_data_by_pid(processes, pid);
-    char* pname;
-    if (p != NULL) {
-        char* temp = p->pname;  // Don't free temp
-        pname = (char*)malloc(sizeof(char) * (strlen(temp) + 1));
-        strcpy(pname, temp);
-        processes = delete_node_by_pid(processes, pid);
-    } else {
-        pname = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
-        strcpy(pname, "Process");
-    }
-
-    if (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS) {
-        fprintf(stderr, ANSI_RED_BOLD "\nALERT: %s with ID %d exited normally.\n" ANSI_DEFAULT, pname, pid);
-    } else {
-        fprintf(stderr, ANSI_RED_BOLD "\nALERT: %s with ID %d exited abnormally.\n" ANSI_DEFAULT, pname, pid);
-    }
-    prompt();
-    fflush(stdout);
-    free(pname);
-    return;
-}
 
 // void child_stop(int sig_num) {
 //     raise(SIGSTOP);
@@ -67,8 +39,17 @@ bool not_kishmish(int argc, char** argv, bool bg) {
             return false;
         } else if (pid > 0) {
             // IN PARENT, WAIT FOR CHILD TO COME BACK
+            FG_CHILD_PID = pid;
+            char* temp = get_full_command("", argc, argv);
+            strcpy(FG_CHILD_PNAME, temp);
+            free(temp);
+
             int w_st;
             waitpid(pid, &w_st, WUNTRACED);
+            
+            FG_CHILD_PID = -1;
+            FG_CHILD_PNAME[0] = '\0';
+
             return (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS);
         } else {
             // IN CHILD
@@ -86,9 +67,11 @@ bool not_kishmish(int argc, char** argv, bool bg) {
             return false;
         } else if (pid > 0) {
             // IN PARENT, DON'T WAIT
-            int id = store_process(pid, argc, argv);
+            char* temp = get_full_command("", argc, argv);
+            int id = store_process(pid, temp);
+            free(temp);
+
             printf("[%d] %d\n", id, pid);
-            signal(SIGCHLD, child_dead);
             tcsetpgrp(STDIN_FILENO, getpgrp());
             return true;
         } else {

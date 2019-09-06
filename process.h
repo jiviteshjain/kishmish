@@ -22,6 +22,6 @@ proc* get_data_by_id(node* head, int id);
 void print_all(node* head);
 void init_processes();
 proc make_proc(pid_t pid, char* pname);
-int store_process(pid_t pid, int argc, char** argv);
+int store_process(pid_t pid, char* temp);
 
 #endif

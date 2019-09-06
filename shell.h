@@ -35,4 +35,7 @@ char* home_dir;
 char* user_name;
 char* host_name;
 
+pid_t SHELL_PID;
+pid_t FG_CHILD_PID;
+char FG_CHILD_PNAME[MAX_STATIC_STR_LEN];
 #endif

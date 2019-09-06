@@ -108,10 +108,10 @@ proc make_proc (pid_t pid, char* pname) {
     return p;
 }
 
-int store_process(pid_t pid, int argc, char** argv) {
-    char* temp = get_full_command("", argc, argv);
+int store_process(pid_t pid, char* temp) {
+
     processes = insert_tail(processes, make_proc(pid, temp));
-    free(temp);
+    
     proc* val = get_data_by_pid(processes, pid);
     if (val != NULL)
         return val->id;
