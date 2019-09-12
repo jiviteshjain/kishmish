@@ -7,5 +7,6 @@
 void init_signals();
 void child_dead(int sig_num);
 void send_me_back(int sig_num);
+void sigtstp_handler(int signum);
 
 #endif

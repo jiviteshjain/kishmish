@@ -6,7 +6,8 @@
 
 void init_signals() {
     signal(SIGCHLD, child_dead);
-    signal(SIGTSTP, send_me_back);
+    // signal(SIGTSTP, SIG_IGN);
+    signal(SIGTSTP, sigtstp_handler);
 }
 
 void child_dead(int sig_num) {
@@ -62,4 +63,19 @@ void send_me_back(int sig_num) {
     int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
     printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
     fflush(stdout);
+}
+
+void sigtstp_handler(int signum) {
+    pid_t pid = getpid();
+
+    if (pid != SHELL_PID) {
+        // CHILD PROCESS
+        return;
+    }
+
+    if (FG_CHILD_PID == -1) {
+        return;
+    }
+
+    raise(SIGTSTP);
 }

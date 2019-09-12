@@ -34,21 +34,33 @@ bool fg(int job_num) {
     
     printf("[%d] %s %d resumed\n", job_num, p->pname, p->pid);
 
+    FG_CHILD_PID = child_pid;
+    strcpy(FG_CHILD_PNAME, p->pname);
+
     processes = delete_node_by_pid(processes, child_pid);
 
     signal(SIGTTIN, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
     // TODO: Error handling here
-    tcsetpgrp(STDIN_FILENO, child_pid);
+    tcsetpgrp(STDIN_FILENO, child_pid); // It is already a separate group
     kill(child_pid, SIGCONT);
 
     int w_st;
-    waitpid(child_pid, &w_st, 0);
+    waitpid(child_pid, &w_st, WUNTRACED);
 
     tcsetpgrp(STDIN_FILENO, getpgrp());
 
     signal(SIGTTIN, SIG_DFL);
     signal(SIGTTOU, SIG_DFL);
+    
+    if (WIFSTOPPED(w_st)) {
+        // IT WAS STOPPED, NOT TERMINATED
+        int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
+        printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
+    }
+
+    FG_CHILD_PID = -1;
+    FG_CHILD_PNAME[0] = '\0';
 
     // setpgid(child_pid, getpgrp());
     // tcsetpgrp(STDIN_FILENO, getpgrp());

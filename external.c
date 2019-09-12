@@ -44,15 +44,33 @@ bool not_kishmish(int argc, char** argv, bool bg) {
             strcpy(FG_CHILD_PNAME, temp);
             free(temp);
 
+            signal(SIGTTIN, SIG_IGN);
+            signal(SIGTTOU, SIG_IGN);
+            // TODO: Error handling here
+            setpgid(pid, 0);
+            tcsetpgrp(STDIN_FILENO, pid);
+
             int w_st;
             waitpid(pid, &w_st, WUNTRACED);
+
+            tcsetpgrp(STDIN_FILENO, getpgrp());
+
+            signal(SIGTTIN, SIG_DFL);
+            signal(SIGTTOU, SIG_DFL);
             
+            if (WIFSTOPPED(w_st)) {
+                // IT WAS STOPPED, NOT TERMINATED
+                int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
+                printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
+            }
+
             FG_CHILD_PID = -1;
             FG_CHILD_PNAME[0] = '\0';
 
             return (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS);
         } else {
             // IN CHILD
+            setpgid(0, 0);
             if (execvp(argv[0], argv) < 0) {
                 perror("Could not execute command");
                 exit(EXIT_FAILURE); // kill child if can't execute command
@@ -72,6 +90,8 @@ bool not_kishmish(int argc, char** argv, bool bg) {
             free(temp);
 
             printf("[%d] %d\n", id, pid);
+            
+            setpgid(pid, 0);
             tcsetpgrp(STDIN_FILENO, getpgrp());
             return true;
         } else {
