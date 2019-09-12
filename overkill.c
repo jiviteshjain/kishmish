@@ -20,6 +20,7 @@ bool overkill() {
     node* cur = processes;
     while (cur != NULL) {
         kill(cur->data.pid, SIGKILL);
+        usleep(1000);
         cur = cur->next;
     }
     return true;

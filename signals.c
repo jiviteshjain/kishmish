@@ -54,8 +54,8 @@ void send_me_back(int sig_num) {
     }
 
     // SEND FG PROCESS TO BACKGROUND
-    kill(FG_CHILD_PID, SIGTSTP);
     setpgid(FG_CHILD_PID, 0);
+    kill(FG_CHILD_PID, SIGTSTP);
     tcsetpgrp(STDIN_FILENO, getpgrp()); // should pull resources out of that processes
 
     

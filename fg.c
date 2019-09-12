@@ -50,5 +50,12 @@ bool fg(int job_num) {
     signal(SIGTTIN, SIG_DFL);
     signal(SIGTTOU, SIG_DFL);
 
+    // setpgid(child_pid, getpgrp());
+    // tcsetpgrp(STDIN_FILENO, getpgrp());
+    // kill(child_pid, SIGCONT);
+
+    // int w_st;
+    // waitpid(child_pid, &w_st, 0);
+
     return (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS);
 }
