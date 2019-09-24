@@ -8,6 +8,7 @@ void init_signals() {
     signal(SIGCHLD, child_dead);
     // signal(SIGTSTP, SIG_IGN);
     signal(SIGTSTP, sigtstp_handler);
+    signal(SIGINT, sigint_handler);
 }
 
 void child_dead(int sig_num) {
@@ -40,30 +41,30 @@ void child_dead(int sig_num) {
     return;
 }
 
-void send_me_back(int sig_num) {
+// void send_me_back(int sig_num) {
     
-    pid_t pid = getpid();
+//     pid_t pid = getpid();
 
-    if (pid != SHELL_PID) {
-        // CHILD PROCESS
-        return;
-    }
-    // PARENT PROCESS
-    if (FG_CHILD_PID == -1) {
-        // NO FG PROCESS RUNNING
-        return;
-    }
+//     if (pid != SHELL_PID) {
+//         // CHILD PROCESS
+//         return;
+//     }
+//     // PARENT PROCESS
+//     if (FG_CHILD_PID == -1) {
+//         // NO FG PROCESS RUNNING
+//         return;
+//     }
 
-    // SEND FG PROCESS TO BACKGROUND
-    setpgid(FG_CHILD_PID, 0);
-    kill(FG_CHILD_PID, SIGTSTP);
-    tcsetpgrp(STDIN_FILENO, getpgrp()); // should pull resources out of that processes
+//     // SEND FG PROCESS TO BACKGROUND
+//     setpgid(FG_CHILD_PID, 0);
+//     kill(FG_CHILD_PID, SIGTSTP);
+//     tcsetpgrp(STDIN_FILENO, getpgrp()); // should pull resources out of that processes
 
     
-    int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
-    printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
-    fflush(stdout);
-}
+//     int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
+//     printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
+//     fflush(stdout);
+// }
 
 void sigtstp_handler(int signum) {
     pid_t pid = getpid();
@@ -78,4 +79,19 @@ void sigtstp_handler(int signum) {
     }
 
     raise(SIGTSTP);
+}
+
+void sigint_handler(int signum) {
+    pid_t pid = getpid();
+
+    if (pid != SHELL_PID){
+        // child process
+        return;
+    }
+
+    if (FG_CHILD_PID == -1) {
+        return;
+    }
+
+    raise(SIGINT);
 }
