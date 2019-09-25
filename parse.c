@@ -16,6 +16,7 @@
 #include "overkill.h"
 #include "fg.h"
 #include "bg.h"
+#include "redirection.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -74,17 +75,84 @@ void parse_command(char* str) {
     char* command = (char*)malloc(sizeof(char) * (strlen(next) + 1));
     strcpy(command, next);
 
+    redirect r;
+    r.append = false;
+    r.input = false;
+    r.output = false;
+    r.input_file[0] = '\0';
+    r.output_file[0] = '\0';
+    bool in_file_now = false;
+    bool out_file_now = false;
+
     int argc = 0;
     char** argv = (char**)malloc(sizeof(char*) * (len+1)); // lots of space
 
     while((next = strtok(NULL, space_delim)) != NULL) {
+
+        if (strcmp(next, "<") == 0) {
+
+            if (out_file_now || in_file_now) {
+                printf("Could not parse command: Parse error near '<'.\n");
+                return; // TODO: FREE POINTERS
+            }
+
+            r.input = true;
+            in_file_now = true;
+            continue;
+
+        } else if (strcmp(next, ">") == 0) {
+            
+            if (out_file_now || in_file_now) {
+                printf("Could not parse command: Parse error near '>'.\n");
+                return;  // TODO: FREE POINTERS
+            }
+
+            r.output = true;
+            out_file_now = true;
+            r.append = false;
+            continue;
+
+        } else if (strcmp(next, ">>") == 0) {
+            
+            if (out_file_now || in_file_now) {
+                printf("Could not parse command: Parse error near '>>'.\n");
+                return;  // TODO: FREE POINTERS
+            }
+
+            r.output = true;
+            out_file_now = true;
+            r.append = true;
+            continue;
+        }
+
+        if (in_file_now) {
+            strcpy(r.input_file, next);
+            in_file_now = false;
+            continue;
+        } else if (out_file_now) {
+            strcpy(r.output_file, next);
+            out_file_now = false;
+            continue;
+        }
+
         argv[argc] = (char*)malloc(sizeof(char) * (strlen(next) + 1));
         strcpy(argv[argc], next);
         argc++;
     }
+
+    if (in_file_now || out_file_now) {
+        printf("Could not parse command: Invalid redirection syntax.\n");
+        return; // TODO: FREE POINTERS
+    }
+
     argc = handle_amp(command, argc, argv);
     handle_tilda(argc, argv);
-    
+
+    redirect_meta m = redirection_begin(r);
+    if ((r.input && m.in_file == -1) || (r.output && m.out_file == -1)) {
+        return; // ERROR PRINTED BY redirection_begin
+    }
+
     if (strcmp(command, "echo") == 0) {
         handle_echo(argc, argv);
     } else if (strcmp(command, "ls") == 0) {
@@ -118,6 +186,8 @@ void parse_command(char* str) {
     } else {
         handle_external(command, argc, argv);
     }
+
+    redirection_end(r, m);
 
     free(command);
     for (int i = 0; i < argc; i++) {
