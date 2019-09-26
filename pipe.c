@@ -41,13 +41,48 @@ void pied_piper(char* str) {
     }
 
     int stdout_copy = dup(STDOUT_FILENO);
+    if (stdout_copy < 0) {
+        perror("Could not create pipeline");
+        free(command);
+        for (size_t j = 0; j < num_pipes; j++) {
+            free(pipes[j]);
+        }
+        free(pipes);
+        return;
+    }
 
-    pipe(pipes[0]);
-    dup2(pipes[0][1], STDOUT_FILENO);
+    if (pipe(pipes[0]) < 0) {
+        perror("Could not create pipeline");
+        free(command);
+        for (size_t j = 0; j < num_pipes; j++) {
+            free(pipes[j]);
+        }
+        free(pipes);
+        close(stdout_copy);
+        return;
+    }
+
+    if (dup2(pipes[0][1], STDOUT_FILENO) < 0) {
+        perror("Could not create pipeline");
+        free(command);
+        close(pipes[0][0]);
+        close(pipes[0][1]);
+        for (size_t j = 0; j < num_pipes; j++) {
+            free(pipes[j]);
+        }
+        free(pipes);
+        close(stdout_copy);
+        return;
+    }
     parse_command(command);
     close(pipes[0][1]);
 
     int stdin_copy = dup(STDIN_FILENO);
+    if (stdin_copy < 0) {
+        perror("Could not create pipeline");
+        fprintf(stderr, "Fatal I/O error. Exiting...");
+        goodbye();
+    }
 
     size_t i = 0;
     while ((next = strtok_r(NULL, "|", &temp)) != NULL) {
@@ -58,24 +93,53 @@ void pied_piper(char* str) {
         if (i == num_commands - 1) {
             break; // command already copied here
         }
-        pipe(pipes[i]);
-        dup2(pipes[i - 1][0], STDIN_FILENO);
-        dup2(pipes[i][1], STDOUT_FILENO);
+        if (pipe(pipes[i]) < 0) {
+            perror("Could not create pipeline");
+            fprintf(stderr, "Fatal I/O error. Exiting...");
+            goodbye();
+        }
+        if (dup2(pipes[i - 1][0], STDIN_FILENO) < 0) {
+            perror("Could not create pipeline");
+            fprintf(stderr, "Fatal I/O error. Exiting...");
+            goodbye();
+        }
+        if (dup2(pipes[i][1], STDOUT_FILENO) < 0) {
+            perror("Could not create pipeline");
+            fprintf(stderr, "Fatal I/O error. Exiting...");
+            goodbye();
+        }
         parse_command(command);
         close(pipes[i - 1][0]);
         close(pipes[i][1]);
     }
 
-    dup2(pipes[i - 1][0], STDIN_FILENO);
-    dup2(stdout_copy, STDOUT_FILENO);
+    if (dup2(pipes[i - 1][0], STDIN_FILENO) < 0) {
+        perror("Could not create pipeline");
+        fprintf(stderr, "Fatal I/O error. Exiting...");
+        goodbye();
+    }
+    if (dup2(stdout_copy, STDOUT_FILENO) < 0) {
+        perror("Could not create pipeline");
+        fprintf(stderr, "Fatal I/O error. Exiting...");
+        goodbye();
+    }
 
     parse_command(command);
 
-    dup2(stdin_copy, STDIN_FILENO);
+    if (dup2(stdin_copy, STDIN_FILENO) < 0) {
+        perror("Could not create pipeline");
+        fprintf(stderr, "Fatal I/O error. Exiting...");
+        goodbye();
+    }
     
     close(pipes[i - 1][0]);
     close(stdin_copy);
     close(stdout_copy);
     
     free(command);
+
+    for (size_t j = 0; j < num_pipes; j++) {
+        free(pipes[j]);
+    }
+    free(pipes);
 }
