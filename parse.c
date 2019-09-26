@@ -17,6 +17,7 @@
 #include "fg.h"
 #include "bg.h"
 #include "redirection.h"
+#include "pipe.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -218,7 +219,7 @@ void parse(char* input) {
     
     for (i = 0; i < num_commands; i++) {
         store_history(commands[i]);
-        parse_command(commands[i]);
+        pied_piper(commands[i]);
         free(commands[i]);
     }
     free(commands);
