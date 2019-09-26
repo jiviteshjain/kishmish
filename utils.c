@@ -4,6 +4,7 @@
 #include "external.h"
 #include "process.h"
 #include "signals.h"
+// #include "overkill.h"
 
 
 void init() {
@@ -19,8 +20,8 @@ void init() {
     init_signals();
     init_history();
     init_processes();
-    
-    
+
+    printf(ANSI_CLEAR);
     printf(ANSI_YELLOW_BOLD "\n\t***\tWelcome to Kishmish shell\t***\t\n");
     printf(ANSI_YELLOW "\t  Because everything happens for a raisin\t    \t\n\n" ANSI_DEFAULT);
 }
@@ -28,6 +29,7 @@ void init() {
 void goodbye() {
     // Cleanup function
     // Save history, print msg, free pointers, exit
+    // overkill();
     printf(ANSI_YELLOW_BOLD "\nGoodbye!\n" ANSI_YELLOW "This shell was made with a tinge of love, lots of sweetness, and of course, a ton of kishmish :)\n" ANSI_DEFAULT);
     preserve_history();
     free(home_dir);

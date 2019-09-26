@@ -30,6 +30,7 @@
 #define ANSI_YELLOW_BOLD "\033[1;33m"
 #define ANSI_CYAN_BOLD "\033[1;36m"
 #define ANSI_DEFAULT "\033[0m"
+#define ANSI_CLEAR "\033[2J\033[1;1H"
 
 char* home_dir;
 char* user_name;
