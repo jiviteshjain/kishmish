@@ -9,13 +9,13 @@ void handle_fg(int argc, char** argv) {
     }
 
     if (argc != 1) {
-        printf("Could not bring process to foreground: Invalid arguments.\n");
+        fprintf(stderr, "Could not bring process to foreground: Invalid arguments.\n");
         return;
     }
 
     int job_num = strtol(argv[0], NULL, 0);
     if (job_num <= 0) {
-        printf("Could not bring process to foreground: Invalid job number.\n");
+        fprintf(stderr, "Could not bring process to foreground: Invalid job number.\n");
         return;
     }
 
@@ -26,7 +26,7 @@ bool fg(int job_num) {
     proc* p = get_data_by_id(processes, job_num);
 
     if (p == NULL) {
-        printf("Could not bring process to foreground: Process not found.\n");
+        fprintf(stderr, "Could not bring process to foreground: Process not found.\n");
         return false;
     }
 

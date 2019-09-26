@@ -8,7 +8,7 @@ void handle_exit(int argc, char** argv) {
     } else if (argc == 1 && strcmp(argv[0], "&") == 0) {
         exit_kishmish();
     } else {
-        printf("Could not exit: Invalid argumemnts.\n");
+        fprintf(stderr, "Could not exit: Invalid argumemnts.\n");
         return;
     }
 }

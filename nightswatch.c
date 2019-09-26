@@ -5,7 +5,7 @@
 
 void handle_nightswatch(int argc, char** argv) {
     if (argc < 1 || argc > 4) {
-        printf("Could not watch: Invalid arguments.\n");
+        fprintf(stderr, "Could not watch: Invalid arguments.\n");
         return;
     }
     if (strcmp(argv[argc-1], "&") == 0) {
@@ -17,7 +17,7 @@ void handle_nightswatch(int argc, char** argv) {
         } else if (strcmp(argv[0], "dirty") == 0) {
             nightswatch(1, 5);
         } else {
-            printf("Could not watch: Invalid arguments.\n");
+            fprintf(stderr, "Could not watch: Invalid arguments.\n");
             return;
         }
     } else if (argc == 3) {
@@ -31,7 +31,7 @@ void handle_nightswatch(int argc, char** argv) {
             } else if (strcmp(argv[2], "dirty") == 0) {
                 nightswatch(1, interval);
             } else {
-                printf("Could not watch: Invalid arguments.\n");
+                fprintf(stderr, "Could not watch: Invalid arguments.\n");
                 return;
             }
         } else if (
@@ -43,15 +43,15 @@ void handle_nightswatch(int argc, char** argv) {
             } else if (strcmp(argv[0], "dirty") == 0) {
                 nightswatch(1, interval);
             } else {
-                printf("Could not watch: Invalid arguments.\n");
+                fprintf(stderr, "Could not watch: Invalid arguments.\n");
                 return;
             }
         } else {
-            printf("Could not watch: Invalid arguments.\n");
+            fprintf(stderr, "Could not watch: Invalid arguments.\n");
             return;
         }
     } else {
-        printf("Could not watch: Invalid arguments.\n");
+        fprintf(stderr, "Could not watch: Invalid arguments.\n");
         return;
     }
 }
@@ -99,7 +99,7 @@ bool night_dirty() {
             strtok(temp, space_delim);
             char* t = strtok(NULL, space_delim);
             if (t == NULL){
-                printf("Could not display memory info: Unable to read data.\n");
+                fprintf(stderr, "Could not display memory info: Unable to read data.\n");
                 free(temp);
                 fclose(f);
                 return false;
@@ -107,7 +107,7 @@ bool night_dirty() {
             printf("%s ", t);
             t = strtok(NULL, space_delim);
             if (t == NULL) {
-                printf("Could not display memory info: Unable to read data.\n");
+                fprintf(stderr, "Could not display memory info: Unable to read data.\n");
                 free(temp);
                 fclose(f);
                 return false;
@@ -136,7 +136,7 @@ bool nightswatch(int comm, int interval) {
         } else {
             free(temp);
             fclose(f);
-            printf("Could not display interrupt info: Unable to read file.\n");
+            fprintf(stderr, "Could not display interrupt info: Unable to read file.\n");
             return false;
         }
         free(temp);

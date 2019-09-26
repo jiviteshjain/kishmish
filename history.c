@@ -26,18 +26,18 @@ void init_history() {
 void preserve_history() {
     FILE* f = fopen(history_path, "wb");
     if (f == NULL) {
-        printf("Could not save history.\n");
+        fprintf(stderr, "Could not save history.\n");
         return;
     }
     if (fwrite(&history, sizeof(history), 1, f) != 1) {
-        printf("Could not save history.\n");
+        fprintf(stderr, "Could not save history.\n");
         return;
     }
 }
 
 void handle_history(int argc, char** argv) {
     if (argc > 2) {
-        printf("Could not print history: Invalid arguments.\n");
+        fprintf(stderr, "Could not print history: Invalid arguments.\n");
         return;
     }
 
@@ -46,7 +46,7 @@ void handle_history(int argc, char** argv) {
     }
 
     if (argc > 1) {
-        printf("Could not print history: Invalid arguments.\n");
+        fprintf(stderr, "Could not print history: Invalid arguments.\n");
         return;
     }
     if (argc == 0) {

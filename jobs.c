@@ -26,7 +26,7 @@ char get_proc_state(pid_t pid) {
             strtok(temp, space_delim);
             char* t = strtok(NULL, space_delim);
             if (t == NULL) {
-                printf("Could not read process state: Data unavailable.\n");
+                fprintf(stderr, "Could not read process state: Data unavailable.\n");
                 p_status = '\0';
             } else {
                 p_status = t[0];
@@ -47,7 +47,7 @@ void handle_jobs(int argc, char** argv) {
     }
 
     if (argc != 0) {
-        printf("Could not list jobs: Invalid arguments.\n");
+        fprintf(stderr, "Could not list jobs: Invalid arguments.\n");
         return;
     }
 

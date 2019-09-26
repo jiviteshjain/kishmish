@@ -93,7 +93,7 @@ void parse_command(char* str) {
         if (strcmp(next, "<") == 0) {
 
             if (out_file_now || in_file_now) {
-                printf("Could not parse command: Parse error near '<'.\n");
+                fprintf(stderr, "Could not parse command: Parse error near '<'.\n");
                 return; // TODO: FREE POINTERS
             }
 
@@ -104,7 +104,7 @@ void parse_command(char* str) {
         } else if (strcmp(next, ">") == 0) {
             
             if (out_file_now || in_file_now) {
-                printf("Could not parse command: Parse error near '>'.\n");
+                fprintf(stderr, "Could not parse command: Parse error near '>'.\n");
                 return;  // TODO: FREE POINTERS
             }
 
@@ -116,7 +116,7 @@ void parse_command(char* str) {
         } else if (strcmp(next, ">>") == 0) {
             
             if (out_file_now || in_file_now) {
-                printf("Could not parse command: Parse error near '>>'.\n");
+                fprintf(stderr, "Could not parse command: Parse error near '>>'.\n");
                 return;  // TODO: FREE POINTERS
             }
 
@@ -142,7 +142,7 @@ void parse_command(char* str) {
     }
 
     if (in_file_now || out_file_now) {
-        printf("Could not parse command: Invalid redirection syntax.\n");
+        fprintf(stderr, "Could not parse command: Invalid redirection syntax.\n");
         return; // TODO: FREE POINTERS
     }
 

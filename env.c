@@ -8,7 +8,7 @@ void handle_setenv(int argc, char** argv) {
     }
 
     if (argc < 1 || argc > 2) {
-        printf("Could not set environment variable: Invalid arguments.\n");
+        fprintf(stderr, "Could not set environment variable: Invalid arguments.\n");
         return;
     }
 
@@ -34,7 +34,7 @@ void handle_unsetenv(int argc, char** argv) {
     }
 
     if (argc != 1) {
-        printf("Could not unset environment variable: Invalid arguments.\n");
+        fprintf(stderr, "Could not unset environment variable: Invalid arguments.\n");
         return;
     }
 

@@ -9,7 +9,7 @@ void handle_overkill(int argc, char** argv) {
     }
 
     if (argc != 0) {
-        printf("Could not kill background processes: Invalid arguments.\n");
+        fprintf(stderr, "Could not kill background processes: Invalid arguments.\n");
         return;
     }
 

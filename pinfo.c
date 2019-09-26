@@ -13,13 +13,13 @@ void handle_pinfo(int argc, char** argv) {
     }
 
     if (argc > 1 && argc < 0) {
-        printf("Could not list process details: Invalid arguments.\n");
+        fprintf(stderr, "Could not list process details: Invalid arguments.\n");
         return;
     }
 
     int pid = strtol(argv[0], NULL, 10);
     if (pid < 0) {
-        printf("Could not list process details: Invalid arguments.\n(PS.: Process IDs are non-negative)\n");
+        fprintf(stderr, "Could not list process details: Invalid arguments.\n(PS.: Process IDs are non-negative)\n");
         return;
     }
     pinfo(pid);

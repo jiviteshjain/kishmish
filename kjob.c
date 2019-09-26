@@ -9,19 +9,19 @@ void handle_kjob(int argc, char** argv) {
     }
 
     if (argc != 2) {
-        printf("Could not send signal: Invalid arguments.\n");
+        fprintf(stderr, "Could not send signal: Invalid arguments.\n");
         return;
     }
 
     int job_num = strtol(argv[0], NULL, 10);
     if (job_num <= 0) {
-        printf("Could not send signal: Invalid job number.\n");
+        fprintf(stderr, "Could not send signal: Invalid job number.\n");
         return;
     }
 
     int sig_num = strtol(argv[1], NULL, 10);
     if (sig_num <= 0) {
-        printf("Could not send signal: Invalid signal number.\n");
+        fprintf(stderr, "Could not send signal: Invalid signal number.\n");
         return;
     }
 
@@ -31,7 +31,7 @@ void handle_kjob(int argc, char** argv) {
 bool kjob(int job_num, int sig_num) {
     proc* p = get_data_by_id(processes, job_num);
     if (p == NULL) {
-        printf("Could not send signal: Process not found.\n");
+        fprintf(stderr, "Could not send signal: Process not found.\n");
         return false;
     }
 

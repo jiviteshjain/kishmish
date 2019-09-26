@@ -15,7 +15,7 @@ redirect_meta redirection_begin(const redirect r) {
     if (r.input) {
 
         if (r.input_file[0] == '\0') {
-            printf("Could not redirect input: Parse error near '<'.\n");
+            fprintf(stderr, "Could not redirect input: Parse error near '<'.\n");
             return m;
         }
 
@@ -45,7 +45,7 @@ redirect_meta redirection_begin(const redirect r) {
     if (r.output) {
         
         if (r.output_file[0] == '\0') {
-            printf("Could not redirect output: Parse error near '>'.\n");
+            fprintf(stderr, "Could not redirect output: Parse error near '>'.\n");
             return m;
         
         }
@@ -86,7 +86,7 @@ void redirection_end(const redirect r, const redirect_meta m) {
     if (r.input) {
         if (dup2(m.stdin_copy, STDIN_FILENO) < 0) {
             perror("Fatal I/O Error");
-            printf("Exiting...\n");
+            fprintf(stderr, "Exiting...\n");
             goodbye(); // TODO: LOTS OF UN-FREED MEMORY
         }
         close(m.stdin_copy);
@@ -96,7 +96,7 @@ void redirection_end(const redirect r, const redirect_meta m) {
     if (r.output) {
         if (dup2(m.stdout_copy, STDOUT_FILENO) < 0) {
             perror("Fatal I/O Error");
-            printf("Exiting...\n");
+            fprintf(stderr, "Exiting...\n");
             goodbye();  // TODO: LOTS OF UN-FREED MEMORY
         }
         close(m.stdout_copy);

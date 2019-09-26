@@ -10,7 +10,7 @@ void handle_cd (int argc, char** argv) {
     if (argc == 0) {
         cd("~");
     } else if (argc > 1) {
-        printf("Could not change directory: Invalid arguments\n");
+        fprintf(stderr, "Could not change directory: Invalid arguments\n");
         return;
     } else {
         char* temp = trim(argv[0], '\"');

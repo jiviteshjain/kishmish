@@ -9,10 +9,10 @@ void handle_pwd(int argc, char** argv) {
         if (strcmp(argv[0], "&") == 0) {
             pwd();
         } else {
-            printf("Could not display current working directory: Invalid arguments.\n");
+            fprintf(stderr, "Could not display current working directory: Invalid arguments.\n");
         }
     } else {
-        printf("Could not display current working directory: Invalid arguments.\n");
+        fprintf(stderr, "Could not display current working directory: Invalid arguments.\n");
     }
 }
 

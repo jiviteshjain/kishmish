@@ -173,7 +173,7 @@ bool ls(char* path, bool flag_a, bool flag_l) {
     }
 
     if (!S_ISDIR(path_stat.st_mode)) {
-        printf("Could not list directory contents: Not a directory.\n");
+        fprintf(stderr, "Could not list directory contents: Not a directory.\n");
         return false;
     }
 
