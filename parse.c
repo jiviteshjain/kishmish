@@ -18,6 +18,7 @@
 #include "bg.h"
 #include "redirection.h"
 #include "pipe.h"
+#include "recall.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -184,6 +185,8 @@ void parse_command(char* str) {
         handle_fg(argc, argv);
     } else if (strcmp(command, "bg") == 0) {
         handle_bg(argc, argv);
+    } else if (is_recall(command)) {
+        handle_recall(command, argc, argv);
     } else {
         handle_external(command, argc, argv);
     }
@@ -218,7 +221,10 @@ void parse(char* input) {
     // so free only those many times
     
     for (i = 0; i < num_commands; i++) {
-        store_history(commands[i]);
+        if (!is_recall(commands[i])) {
+            // not saved if it starts with up arrow
+            store_history(commands[i]);
+        }
         pied_piper(commands[i]);
         free(commands[i]);
     }

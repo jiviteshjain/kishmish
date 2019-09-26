@@ -1,7 +1,7 @@
 CFLAGS = -g -Wall
 
-kishmish: shell.o utils.o prompt.o signals.o process.o pipe.o redirection.o parse.o jobs.o kjob.o overkill.o fg.o bg.o pwd.o cd.o ls.o echo.o pinfo.o env.o external.o history.o nightswatch.o exit.o
-	gcc -o kishmish $(CFLAGS) shell.o utils.o prompt.o signals.o process.o pipe.o redirection.o parse.o jobs.o kjob.o overkill.o fg.o bg.o pwd.o cd.o ls.o echo.o pinfo.o env.o external.o history.o nightswatch.o exit.o
+kishmish: shell.o utils.o prompt.o signals.o process.o pipe.o redirection.o parse.o jobs.o kjob.o overkill.o fg.o bg.o pwd.o cd.o ls.o echo.o pinfo.o env.o external.o history.o nightswatch.o exit.o recall.o
+	gcc -o kishmish $(CFLAGS) shell.o utils.o prompt.o signals.o process.o pipe.o redirection.o parse.o jobs.o kjob.o overkill.o fg.o bg.o pwd.o cd.o ls.o echo.o pinfo.o env.o external.o history.o nightswatch.o exit.o recall.o
 
 clean:
 	rm -f *.o kishmish
@@ -69,6 +69,9 @@ history.o: history.c history.h
 
 exit.o: exit.c exit.h
 	gcc $(CFLAGS) -c exit.c
+
+recall.o: recall.c recall.h
+	gcc $(CFLAGS) -c recall.c
 
 parse.o: parse.c parse.h
 	gcc $(CFLAGS) -c parse.c
