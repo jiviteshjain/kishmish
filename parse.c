@@ -170,7 +170,7 @@ void parse_command(char* str) {
         handle_history(argc, argv);
     } else if (strcmp(command, "nightswatch") == 0) {
         handle_nightswatch(argc, argv);
-    } else if (strcmp(command, "exit") == 0) {
+    } else if (strcmp(command, "quit") == 0) {
         handle_exit(argc, argv);
     } else if (strcmp(command, "setenv") == 0) {
         handle_setenv(argc, argv);
