@@ -34,7 +34,7 @@ char** break_pipes(char* str) {
     return commands;
 }
 
-void pied_piper(char* str) {
+void pied_piper_fork(char* str) {
     if (str == NULL) {
         return;
     }
@@ -139,7 +139,7 @@ void pied_piper(char* str) {
     return;
 }
 
-void pied_piper_no_fork(char* str) {
+void pied_piper(char* str) {
     // The pipe does not stop if a command in between fails.
     if (str == NULL) {
         return;

@@ -3,7 +3,7 @@
 #include <sys/wait.h>
 
 size_t count_pipes(const char* command);
+void pied_piper_fork(char* str);
 void pied_piper(char* str);
-void pied_piper_no_fork(char* str);
 
 #endif
