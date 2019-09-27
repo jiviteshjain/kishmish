@@ -15,7 +15,131 @@ size_t count_pipes(const char* command) {
     return count;
 }
 
+char** break_pipes(char* str) {
+    size_t num_pipes = count_pipes(str);
+    size_t num_commands = num_pipes + 1;
+
+    char** commands = (char**)malloc(sizeof(char*) * (num_commands + 1));
+    commands[num_commands] = NULL;
+
+    size_t i = 0;
+    char* next = strtok(str, "|");
+    while (next != NULL) {
+        commands[i] = (char*)malloc(sizeof(char) * (strlen(next) + 1));
+        strcpy(commands[i], next);
+        i++;
+        next = strtok(NULL, "|");
+    }
+
+    return commands;
+}
+
 void pied_piper(char* str) {
+    if (str == NULL) {
+        return;
+    }
+
+    size_t num_pipes = count_pipes(str);
+    size_t num_commands = num_pipes + 1;
+    if (num_commands == 1) {
+        parse_command(str);
+        return;
+    }
+
+    char** commands = break_pipes(str); // DONOT USE STR AFTER THIS
+
+    int pipe_a[2];
+    int pipe_b[2];
+
+
+    for (int i = 0; i < num_commands; i++) {
+        if (i & 1) {
+            if (i < num_commands - 1) {
+                pipe(pipe_b);
+            }
+            pid_t pid = fork();
+
+            if (pid < 0) {
+                // IN PARENT, FORK FAILED
+                perror("Could not create pipeline");
+                for (int j = 0; j < num_commands; j++) {
+                    free(commands[j]);
+                }
+                free(commands);
+                return;
+            } else if (pid > 0) {
+                // IN PARENT
+                if (i > 0) {
+                    close(pipe_a[0]);
+                }
+                if (i < num_commands - 1) {
+                    close(pipe_b[1]);
+                }
+                waitpid(pid, NULL, 0);
+            } else {
+                // IN CHILD
+                if (i > 0) {
+                    // close(pipe_a[1]);
+                    dup2(pipe_a[0], STDIN_FILENO);
+                }
+
+                if (i < num_commands - 1) {
+                    // close(pipe_b[0]);
+                    dup2(pipe_b[1], STDOUT_FILENO);
+                }
+
+                parse_command(commands[i]);
+                exit(0);
+            }
+        } else {
+            if (i < num_commands - 1) {
+                pipe(pipe_a);
+            }
+            pid_t pid = fork();
+
+            if (pid < 0) {
+                // IN PARENT, FORK FAILED
+                perror("Could not create pipeline");
+                for (int j = 0; j < num_commands; j++) {
+                    free(commands[j]);
+                }
+                free(commands);
+                return;
+            } else if (pid > 0) {
+                // IN PARENT
+                if (i > 0) {
+                    close(pipe_b[0]);
+                }
+                if (i < num_commands - 1) {
+                    close(pipe_a[1]);
+                }
+                waitpid(pid, 0, WUNTRACED);
+            } else {
+                // IN CHILD
+                if (i > 0) {
+                    // close(pipe_b[1]);
+                    dup2(pipe_b[0], STDIN_FILENO);
+                }
+
+                if (i < num_commands - 1) {
+                    // close(pipe_a[0]);
+                    dup2(pipe_a[1], STDOUT_FILENO);
+                }
+
+                parse_command(commands[i]);
+                exit(0);
+            }
+        }
+    }
+
+    for (int j = 0; j < num_commands; j++) {
+        free(commands[j]);
+    }
+    free(commands);
+    return;
+}
+
+void pied_piper_no_fork(char* str) {
     // The pipe does not stop if a command in between fails.
     if (str == NULL) {
         return;
