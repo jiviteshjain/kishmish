@@ -19,6 +19,7 @@
 #include "redirection.h"
 #include "pipe.h"
 #include "recall.h"
+#include "cronjob.h"
 
 void handle_tilda(int argc, char** argv) {
     for (int i = 0; i < argc; i++) {
@@ -185,6 +186,8 @@ void parse_command(char* str) {
         handle_fg(argc, argv);
     } else if (strcmp(command, "bg") == 0) {
         handle_bg(argc, argv);
+    } else if (strcmp(command, "cronjob") == 0) {
+        handle_cronjob(argc, argv);
     } else if (is_recall(command)) {
         handle_recall(command, argc, argv);
     } else {
