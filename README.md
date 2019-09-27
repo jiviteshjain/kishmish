@@ -2,7 +2,7 @@
 ### *Because everything happens for a raisin*
 
 ## Introduction
-This is a stripped-down shell implemented in C, as part of the submission for Assignment-2 of Computer Systems Engineering-1 Course (Monsoon 2019).
+This is a stripped-down shell implemented in C, as part of the submission for Assignment 2 and 3 of Computer Systems Engineering-1 Course (Monsoon 2019).
 
 ## Functionality and Limitations
 Kishmish supports the following features:
