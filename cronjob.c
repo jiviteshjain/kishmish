@@ -1,14 +1,14 @@
 #include "shell.h"
 #include "utils.h" 
 #include "cronjob.h"
-#include "pipe.h"
+#include "parse.h"
 
 void handle_cronjob(int argc, char** argv) {
     if (argc > 0 && strcmp(argv[argc - 1], "&") == 0) {
         argc--;
     }
 
-    if (argc != 6) {
+    if (argc < 6) {
         fprintf(stderr, "Could not start cronjob: Invalid arguments.\n");
         return;
     }
@@ -21,17 +21,11 @@ void handle_cronjob(int argc, char** argv) {
     bool t_found = false;
     bool p_found = false;
 
-    char* command = NULL;
+    char* command = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
+    command[0] = '\0';
     int t, p;
 
     for (int i = 0; i < argc; i++) {
-        if (c_next) {
-            c_next = false;
-            c_found = true;
-            command = (char*)malloc(sizeof(char) * (strlen(argv[i]) + 1));
-            strcpy(command, argv[i]);
-            continue;
-        }
         if (t_next) {
             t_next = false;
             t_found = true;
@@ -61,6 +55,7 @@ void handle_cronjob(int argc, char** argv) {
                 return;
             }
             c_next = true;
+            c_found = true;
             continue;
         }
         if (strcmp(argv[i], "-t") == 0) {
@@ -69,6 +64,7 @@ void handle_cronjob(int argc, char** argv) {
                 return;
             }
             t_next = true;
+            c_next = false;
             continue;
         }
         if (strcmp(argv[i], "-p") == 0) {
@@ -76,14 +72,23 @@ void handle_cronjob(int argc, char** argv) {
                 fprintf(stderr, "Could not start cronjob: Invalid arguments.\n");
                 return;
             }
-            p_found = true;
+            c_next = false;
             p_next = true;
             continue;
+        }
+
+        if (c_next) {
+            c_found = true;
+            strcat(command, argv[i]);
+            strcat(command, " ");
+            continue;
+        } else {
+            fprintf(stderr, "Could not start cronjob: Invalid arguments.\n");
+            return;
         }
     }
 
     if (!t_found || !c_found || !p_found) {
-        // THIS ALSO INCLUDES THE CASE WHERE SAME ARGUMENT IS GIVEN MULTIPLE TIMES, BECAUSE ONLY 6 ARGUMENTS SO IT MEANS ONE OF THESE WASN'T GIVEN
         fprintf(stderr, "Could not start cronjob: Invalid arguments.\n");
         if (command != NULL) {
             free(command);
@@ -91,10 +96,8 @@ void handle_cronjob(int argc, char** argv) {
         return;
     }
 
-    char* unquoted = trim(command, '"');
-    unquoted = trim(unquoted, '\'');
-    cronjob(unquoted, t, p);
-    free(command);
+    
+    cronjob(command, t, p);
 }
 
 bool cronjob(char* command, int t, int p) {
@@ -120,7 +123,9 @@ bool cronjob(char* command, int t, int p) {
         return false;
     } else if (pid == 0) {
         for (int i = 0; i < num; i++) {
-            pied_piper(command);
+            char* temp = (char*)malloc(sizeof(char) * (strlen(command) + 1));
+            strcpy(temp, command);
+            parse_command(temp); // pipes not needed, because split by pipe already
             sleep(t);
         }
         exit(EXIT_SUCCESS);
