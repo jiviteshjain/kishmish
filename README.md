@@ -25,8 +25,6 @@ Kishmish does not support the following yet:
 
 and maybe a lot more...
 
-*All the functionality required for the assignment has been implemented.*
-
 ## Make instructions
 
 In the directory where the source files reside, execute:
