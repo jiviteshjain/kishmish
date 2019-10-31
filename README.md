@@ -2,7 +2,7 @@
 ### *Because everything happens for a raisin*
 
 ## Introduction
-This is a stripped-down shell implemented in C, as part of the submission for Assignment 2 and 3 of Computer Systems Engineering-1 Course (Monsoon 2019).
+This is a stripped-down shell implemented in C, as part of the Computer Systems Engineering-1 Course (Monsoon 2019).
 
 ## Functionality and Limitations
 Kishmish supports the following features:
@@ -114,10 +114,9 @@ $ make clean
 
 *Have a grape day!*
 
-*Jivitesh Jain, 2018101092, UG-2, CSE*
 ___
-<a id="foot1" href="#note1"><b>1</b></a>: As per assignment requirements
+<a id="foot1" href="#note1"><b>1</b></a>: As per requirements
 
-<a id="foot2" href="#note2"><b>2</b></a>: As per assignment requirements
+<a id="foot2" href="#note2"><b>2</b></a>: As per requirements
 
-<a id="foot3" href="#note3"><b>3</b></a>: As per assignment requirements
+<a id="foot3" href="#note3"><b>3</b></a>: As per requirements
