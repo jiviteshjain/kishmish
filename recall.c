@@ -6,6 +6,9 @@
 #include "recall.h"
 
 bool is_recall(char* command) {
+    // checks if it is a command-recall
+    // returns true if the first characters match those of an up-arrow
+    
     size_t len = strlen(command);
     
     if (len < 3) {
@@ -20,6 +23,8 @@ bool is_recall(char* command) {
 }
 
 void handle_recall(char* command, int argc, char** argv) {
+    // pre-process the arguments for a recall command
+
     if (argc > 0 && strcmp(argv[argc-1], "&") == 0) {
         argc--;
     }
@@ -63,6 +68,7 @@ void handle_recall(char* command, int argc, char** argv) {
 }
 
 bool recall(int up) {
+    // recalls that command
 
     if (up < 0) {
         fprintf(stderr, "Could not recall command history: Invalid arguments.\n");
@@ -95,7 +101,7 @@ bool recall(int up) {
     prompt();
     printf("%s\n", command);
     if (!is_recall(command)) {
-        store_history(command);
+        store_history(command); // the recalled command is stored in history again
     }
     pied_piper(command);
     

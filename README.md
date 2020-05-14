@@ -2,12 +2,12 @@
 ### *Because everything happens for a raisin*
 
 ## Introduction
-This is a stripped-down shell implemented in C, as part of the Computer Systems Engineering-1 Course (Monsoon 2019).
+This is a stripped-down shell implemented in C.
 
 ## Functionality and Limitations
 Kishmish supports the following features:
 
-- Built-in commands: `ls [al]`, `echo`, `pwd`, `cd`, `quit`, `history`, `pinfo`, `nightswatch`, `setenv`, `unsetenv`, `jobs`, `kjobs`, `overkill`, `fg`, `bg`, `cronjob`
+- Built-in commands: `ls [al]`, `echo`, `pwd`, `cd`, `quit`, `history`, `pinfo`, `nightswatch`, `setenv`, `unsetenv`, `jobs`, `kjobs`, `overkill`, `fg`, `bg`, `cronjob`, `quit`
 - Process management including foreground and background processes and switching between them.
 - Piping and redirection
 - Signal handling for signals like `SIGINT` and `SIGTSTP`
@@ -45,7 +45,7 @@ $ make clean
 - `prompt.c` : Contains the function responsible for generating and printing the shell prompt
 - `parse.c` : Contains functions that parse and sanitize the entered commands and call appropriate functions
 - `external.c` : Contains functions that handle the execution of external programs in the foreground and background
-- `exit.c` : Contains functions that implement the `exit` command
+- `exit.c` : Contains functions that implement the `quit` command
 - `pwd.c` : Contains functions that implement the `pwd` command
 - `cd.c` : Contains functions that implement the `cd` command
 - `ls.c` : Contains functions that implement the `ls` command
@@ -108,7 +108,12 @@ $ make clean
 - All built-in commands listed above behave as expected, mimicking the behaviour of bash.
 - The syntax of some peculiar commands is elaborated below:
 - - `cronjob -c command -t wait -p time` : Repeatedly run `command` after every `wait` seconds for a total duration of `time` seconds in a subshell in the background. The subshell is however granted access to terminal I/O and runs in the same process group as Kishmish.
-- - `nightswatch -n wait [dirty | interrupt]` : This command prints certain system information to the screen every `wait` seconds. The command runs in Kishmish itself, not in a separate subshell, hence it cannot be sent to the background and cannot be interrupted. This is by design, because the command needs to periodically print data to the terminal. It can be exited using the sequence <kbd>Q</kbd>+<kbd>Enter</kbd>. The information displayed corresponds to the amount of dirty memory in the system cache if `dirty` is selected, or the number of keyboard interrupts per CPU core if `interrupt` is selected. 
+- - `nightswatch -n wait [dirty | interrupt]` : This command prints certain system information to the screen every `wait` seconds. The command runs in Kishmish itself, not in a separate subshell, hence it cannot be sent to the background and cannot be interrupted. This is by design, because the command needs to periodically print data to the terminal. It can be exited using the sequence <kbd>Q</kbd>+<kbd>Enter</kbd>. The information displayed corresponds to the amount of dirty memory in the system cache if `dirty` is selected, or the number of keyboard interrupts per CPU core if `interrupt` is selected.
+- - `fg job-number` or `bg job-number` where job number is the job number assigned by the shell, different from the process id
+- - for command recall, press the <kbd>Up</kbd> arrow the required number of times and press <kbd>Enter</kbd>
+- - `kjob job-number signal-number` sends signal with `signal-number` to process with `job-number`
+- - `overkill` kills all background processes at once
+- - `pinfo [pid]` lists information about process with `pid` as the process id. If no process id is specified, it lists information about Kishmish's own process
 
 *Have a grape day!*
 

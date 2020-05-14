@@ -3,7 +3,10 @@
 #include "ls.h"
 
 void handle_ls(int argc, char** argv) {
-    
+    // checks for 'a' and 'l' flags, and whether a directory to list has been specified
+    // or not, otherwise defaults to home directory
+
+
     if (argc > 0 && strcmp(argv[argc-1], "&") == 0) {
         argc--;
     }
@@ -121,11 +124,6 @@ ls_data get_ls_data (const char* path) {
 }
 
 void print_ls_data (const ls_data f) {
-    // printf(ANSI_GREEN "%s\n" ANSI_DEFAULT, f.name);
-    // printf("PERMISSIONS: %s\tSIZE: %lu\n", f.perms, f.size);
-    // printf("LAST MODIFIED ON: %s\tHARD LINKS: %d\n", f.time, f.num_h_link);
-    // printf("USER: %s\tGROUP: %s\n", f.user, f.group);
-    // printf("_____ _____ _____\n");
 
     if (f.perms[0] == 'd') {
         printf("%s\t%d\t%s\t%s\t%lu\t%s\t" ANSI_CYAN_BOLD "%s\n" ANSI_DEFAULT,

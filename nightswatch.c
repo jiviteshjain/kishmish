@@ -166,6 +166,8 @@ bool nightswatch(int comm, int interval) {
 }
 
 bool get_me_out() {
+    // listen for 'q' and exit
+    
     bool can_read = false;
 
     struct timeval tv;

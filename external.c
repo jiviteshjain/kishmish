@@ -6,11 +6,11 @@
 #include "signals.h"
 
 
-// void child_stop(int sig_num) {
-//     raise(SIGSTOP);
-// }
 
 void handle_external(char* command, int argc, char** argv) {
+    // make a new argv array with the command as the first string
+    // and a null pointer at the end
+
     char** new_argv = (char**)malloc(sizeof(char*) * (argc + 2));
     new_argv[0] = command; // Not copying strings, just the pointers
     bool bg = false;

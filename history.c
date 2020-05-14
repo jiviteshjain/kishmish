@@ -2,7 +2,16 @@
 #include "utils.h"
 #include "history.h"
 
+// we store the last 20 commands in a circular-queue-like data structure
+// we do not store consecutive repeated commands
+// semicolon-separated commands are stored as separate entries
+// a pipeline of commands is stored as a single entry
+// no whitespace-cleaning etc is done. command is stored is verbatim
+
 void init_history() {
+    // try to read history from binary file, if it exists
+    // otherwise initialise history data structures
+
     size_t len = strlen(home_dir) + strlen(HISTORY_FILE_NAME) + 1;
     history_path = (char*)malloc(sizeof(char) * (len + 1));
     strcpy(history_path, home_dir);
@@ -24,6 +33,9 @@ void init_history() {
 }
 
 void preserve_history() {
+    // create or overwrite history file
+    // storing history datastructures as binary
+
     FILE* f = fopen(history_path, "wb");
     if (f == NULL) {
         fprintf(stderr, "Could not save history.\n");
@@ -60,12 +72,16 @@ void handle_history(int argc, char** argv) {
 }
 
 void store_history(char* str) {
+    // store this command in history
+    
     if (strlen(str) > MAX_STATIC_STR_LEN-1) {
         return;
     }
+
     if (history.ind_h >= 0 && strcmp(history.data[history.ind_h % 20], str) == 0) {
         return; //avoid consecutive duplicates
     }
+
     if (history.ind_h < 19) {
         history.ind_h++;
         strcpy(history.data[history.ind_h], str);
@@ -82,6 +98,8 @@ void store_history(char* str) {
 }
 
 void print_history(int n) {
+    // print these many commands
+    
     if (n <= 0) {
         return;
     }

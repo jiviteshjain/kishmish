@@ -30,9 +30,8 @@ int main (void) {
             in_line[in_size - 1] = '\0';
         }
         parse(in_line);
-        // nightswatch(1, 2);
     }
 
-    // FREE POINTERS
+    // CLEANUP
     goodbye();
 }

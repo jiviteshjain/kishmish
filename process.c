@@ -2,6 +2,12 @@
 #include "utils.h"
 #include "process.h"
 
+// processes are stored as a linked list of proc data structures
+// internal ids assigned to the processes are in ascending order of
+// birth times, only including the processes that are still alive
+// thus, they can change if other processes die
+// process id is used throughout for unique identification of a process
+
 // LINKED LIST FUNCTIONS
 
 node* insert_head(node* head, proc data) {

@@ -37,37 +37,42 @@ bool fg(int job_num) {
     FG_CHILD_PID = child_pid;
     strcpy(FG_CHILD_PNAME, p->pname);
 
+    // process list only stores background processes
     processes = delete_node_by_pid(processes, child_pid);
 
+    // protect shell against signals for illegal use of stdin and stdout
     signal(SIGTTIN, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
+
+    // It is already a separate group
+    // make the child's process group the foreground process group
+    tcsetpgrp(STDIN_FILENO, child_pid);
     // TODO: Error handling here
-    tcsetpgrp(STDIN_FILENO, child_pid); // It is already a separate group
+
+    // ask child to continue
     kill(child_pid, SIGCONT);
 
+    // wait for child
     int w_st;
     waitpid(child_pid, &w_st, WUNTRACED);
 
+    // child is completed, now make shell the foreground process group again
     tcsetpgrp(STDIN_FILENO, getpgrp());
 
+    // safe to end protection from signals
     signal(SIGTTIN, SIG_DFL);
     signal(SIGTTOU, SIG_DFL);
     
+    // if the child was just stopped, store it in the process list again
     if (WIFSTOPPED(w_st)) {
         // IT WAS STOPPED, NOT TERMINATED
         int child_id = store_process(FG_CHILD_PID, FG_CHILD_PNAME);
         printf("[%d] %s %d suspended\n", child_id, FG_CHILD_PNAME, FG_CHILD_PID);
     }
 
+    // no foreground process
     FG_CHILD_PID = -1;
     FG_CHILD_PNAME[0] = '\0';
-
-    // setpgid(child_pid, getpgrp());
-    // tcsetpgrp(STDIN_FILENO, getpgrp());
-    // kill(child_pid, SIGCONT);
-
-    // int w_st;
-    // waitpid(child_pid, &w_st, 0);
 
     return (WIFEXITED(w_st) && WEXITSTATUS(w_st) == EXIT_SUCCESS);
 }

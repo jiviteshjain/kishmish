@@ -4,10 +4,11 @@
 #include "external.h"
 #include "process.h"
 #include "signals.h"
-// #include "overkill.h"
 
 
 void init() {
+    // initialise everything here
+
     home_dir = get_home_dir();
     user_name = getlogin();  // Statically declared. Don't free() this
     host_name = (char*)malloc(sizeof(char) * (HOST_NAME_MAX + 1));
@@ -27,9 +28,9 @@ void init() {
 }
 
 void goodbye() {
-    // Cleanup function
+    // cleanup and exit
     // Save history, print msg, free pointers, exit
-    // overkill();
+    
     printf(ANSI_YELLOW_BOLD "\nGoodbye!\n" ANSI_YELLOW "This shell was made with a tinge of love, lots of sweetness, and of course, a ton of kishmish :)\n" ANSI_DEFAULT);
     preserve_history();
     free(home_dir);
@@ -39,7 +40,9 @@ void goodbye() {
 
 char* trim(char* str, char c) {
     // trims occurences of c from front and back
-    // does not modify original pointer, returns new pointer, but modifies original string. Use original pointer to free
+    // does not modify original pointer, returns new pointer,
+    // but modifies original string. use original pointer to free
+
     char* t = str;
     while (*t == c) {
         t++;
@@ -54,6 +57,10 @@ char* trim(char* str, char c) {
 }
 
 char* substr (const char* str, size_t start, size_t length) {
+    // returns a substring of str starting at start and of length characters
+    // dynamically allocates and returns a new copy, caller must free
+    // does not modify old copy or pointers
+
     long long total_len = strlen(str);
     if (start + length > total_len) {
         return NULL;
@@ -67,6 +74,8 @@ char* substr (const char* str, size_t start, size_t length) {
 }
 
 size_t count_chars (const char* str, char c) {
+    // counts the number of occurences of c in str
+
     size_t len = strlen(str);
     size_t count = 0;
     for (size_t i = 0; i < len; i++) {
@@ -79,6 +88,7 @@ size_t count_chars (const char* str, char c) {
 
 long long length_num(long long n) {
     // Returns number of digits in abs(n)
+
     if (n == 0) {
         return 1;
     }
@@ -97,6 +107,9 @@ long long length_num(long long n) {
 }
 
 char* num_to_str(long long n) {
+    // converts an integer to its base 10 string representation
+    // dynamically allocates and returns a new string, caller must free
+
     long long len = length_num(n);
 
     char* str = (char*)malloc(sizeof(char) * (len + (long long)(n < 0) + 1));
@@ -128,6 +141,11 @@ char* num_to_str(long long n) {
 }
 
 char* tilda_expand(char* str) {
+    // expands the tilda in front of a path into home_dir
+    // if path contains a tilda, allocates and returns a new string, caller must free
+    // else, returns the same pointer, unmodified
+    // gauranteed to not modify original string or pointer
+
     if (str[0] != '~')
         return str;
 
@@ -139,6 +157,9 @@ char* tilda_expand(char* str) {
 }
 
 char* get_home_dir() {
+    // gets the current home directory
+    // dynamically allocates and returns a pointer to a new string, caller must free
+
     pid_t pid = getpid();
     char* read_path = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
     sprintf(read_path, "/proc/%d/exe", pid);
@@ -163,6 +184,10 @@ char* get_home_dir() {
 }
 
 char* get_relative_pwd(char* dir) {
+    // convert dir (assumed absolute) to path relative to home_dir
+    // returns dir if dir is not a sub-directory of home_dir
+    // in either case dynamically allocates and returns pointer to a new string, caller must free
+
     char* cur_dir = (char*)malloc(sizeof(char) * (strlen(dir) + 1));
     strcpy(cur_dir, dir);
     size_t cur_len = strlen(cur_dir);
@@ -198,7 +223,9 @@ char* get_relative_pwd(char* dir) {
 }
 
 char* get_full_command(char* command, int argc, char** argv) {
-
+    // combines command and its arguments into a single space-separated string
+    // dynamically allocates and returns pointer to a new string, must be freed by caller
+    
     char* temp = (char*)malloc(sizeof(char) * MAX_STATIC_STR_LEN);
     strcpy(temp, command);
     size_t len = strlen(temp);

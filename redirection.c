@@ -4,7 +4,8 @@
 #include "redirection.h"
 
 redirect_meta redirection_begin(const redirect r) {
-    // printf("APPEND: %d\nINPUT: %d\n FILE: %s\n", r.append, r.input, r.output_file);
+    // initiate redirection as per requests in r
+    // duplicate file handles and return back everything needed to stop
 
     redirect_meta m;
     m.in_file = -1;
@@ -83,6 +84,8 @@ redirect_meta redirection_begin(const redirect r) {
 }
 
 void redirection_end(const redirect r, const redirect_meta m) {
+    // duplicate back file handles to normal
+    
     if (r.input) {
         if (dup2(m.stdin_copy, STDIN_FILENO) < 0) {
             perror("Fatal I/O Error");

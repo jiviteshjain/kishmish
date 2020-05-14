@@ -4,6 +4,8 @@
 #include "jobs.h"
 
 char get_proc_state(pid_t pid) {
+    // gets process state from appropriate file
+
     char* stat_path = (char*)malloc(sizeof(char) * (15 + length_num(pid)));
     sprintf(stat_path, "/proc/%d/status", pid);
 

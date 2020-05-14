@@ -12,6 +12,7 @@ void handle_echo (int argc, char** argv) {
     }
     char** trimmed_argv = (char**)malloc(sizeof(char*) * argc);
 
+    // remove quotes
     for (int i = 0; i < argc; i++) {
         trimmed_argv[i] = trim(argv[i], '\"');
         trimmed_argv[i] = trim(trimmed_argv[i], '\'');

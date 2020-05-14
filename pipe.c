@@ -16,6 +16,12 @@ size_t count_pipes(const char* command) {
 }
 
 char** break_pipes(char* str) {
+    // breaks the command by '|' and returns them as an array
+    // does not check for whitespace only, or empty commands
+    // does not strip whitespace
+    // dynamically allocates new memory, must be freed by caller
+    // uses strtok on original pointer, renders it unusable, but can be freed
+
     size_t num_pipes = count_pipes(str);
     size_t num_commands = num_pipes + 1;
 
@@ -35,6 +41,8 @@ char** break_pipes(char* str) {
 }
 
 void pied_piper_fork(char* str) {
+    // runs each command from the pipeline in a new fork
+
     if (str == NULL) {
         return;
     }
@@ -140,7 +148,9 @@ void pied_piper_fork(char* str) {
 }
 
 void pied_piper(char* str) {
+    // does not fork a child for each command in the pipeline
     // The pipe does not stop if a command in between fails.
+    
     if (str == NULL) {
         return;
     }
